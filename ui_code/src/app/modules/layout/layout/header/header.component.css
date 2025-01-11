@@ -1,0 +1,14 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
+mat-toolbar{
+background-color:  #b3b1b9;
+/* background-color: rgb(5, 69, 151); */
+/* background-color: rgb(104, 102, 102); */
+
+/* box-shadow: 0 1px 6px 0 rgba(32, 33, 36, 0.28); */
+}
+
+

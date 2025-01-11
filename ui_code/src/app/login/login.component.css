@@ -1,0 +1,112 @@
+
+body{
+  font-family: poppins;
+}
+.background{
+  /* background: url('../../assets/images/background-blue-canvas-260nw-412252699.webp'); */
+  position: relative;
+  padding: 0;
+  width: 100%;
+ height: 950px;
+  min-height: 100%;
+  background-size: cover;
+  /* width: 100%; */
+  /* display: flex; */
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  min-height: 100%;
+  opacity: 0.9;
+  /* background-color: rgba(38, 38, 39, 1) ; */
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* filter: brightness(70%); */
+  background-image:linear-gradient(rgba(0, 0, 0, 0.28),rgba(0,0,0,0.28)),url('../../assets/images/HMG-Hotel.jpg');
+  /* background-image: linear-gradient(rgba(0,0,0,0.28),rgba(0,0,0,0.28)),url('../../assets/images/athenaeum.jpg'); */
+/* background-color: aqua; */
+  /* opacity: 0.9; */
+
+}
+.mat-form-field-appearance-outline .mat-form-field-outline-thick {
+  color: rgb(2, 92, 29) !important;
+}
+  .card{
+    width: 378px;
+    height: 370px;
+    padding: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* border: 1px solid rgb(63, 61, 61); */
+    border-radius: 1.0rem;
+    transform: translate(-50%,-50%);
+    /* background: rgb(245, 241, 241); */
+    background: rgba(246, 248, 251, 0.9) ;
+    /* background:linear-gradient(45deg, rgba(darken(#1a2041cc,10%), 0.85), #1a2041cc) ; */
+    box-shadow: 0px 8px 9px rgba(247, 240, 240, 0.3);
+}
+
+.title {
+  color: rgb(12, 12, 12);
+  font-size: 1.6em;
+  font-weight: 550;
+  margin: 10px 0 30px 0;
+  background-color: rgb(105, 73, 52);
+  /* background-color: rgba(167, 110, 6, 0.815); */
+  /* background-color: rgb(223, 112, 39); */
+  padding: 20px;
+  /* letter-spacing: 1px; */
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+mat-label{
+    color:#272626;
+    font-weight: 500;
+}
+
+
+
+.fa-solid{
+  margin-left:-14px;
+  margin-top: 8px;
+  position: absolute;
+  color: rgb(66, 65, 65);
+  font-size: 15px;
+}
+
+
+
+::ng-deep .mat-form-field {
+  font-size: 7px;
+  line-height: 0.5;
+  border: 2px black solid;
+  color: #000;
+
+}
+
+
+
+@supports (top: max(0%)){
+.mdc-text-field--outlined {
+    padding-left: max(28px, calc(var(--mdc-shape-small, 4px) + 4px));
+    background-color: red;
+}}
+mat-mdc-text-field-wrapper {
+  width: 100%;
+  background: red !important;
+}
+
+
+a{
+  text-decoration: none;
+  color: rgb(9, 9, 241);
+  font-weight: 400;
+}
+.BTNlog{
+  display: inline;
+
+}
+#submit{
+  background-color: rgb(105, 73, 52);color: white;
+}

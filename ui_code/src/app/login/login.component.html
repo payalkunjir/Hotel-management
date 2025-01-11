@@ -1,0 +1,59 @@
+<div class="container-fluid background">
+
+  <div class="row ">
+    <div class="col-md-6">
+      <div class="card" style="line-height: 0.5;">
+
+          <p class="title text-center text-light">Login</p>
+          <!-- (ngSubmit)="LoginData()" -->
+          <form  [formGroup]="loginform"  >
+            <!-- <div class="mb-3"> -->
+              <div class="col-12 ">
+                <mat-form-field appearance="outline">
+
+                  <mat-label>Username</mat-label>
+                  <input class="text-dark" type="text" matInput formControlName="Username">
+                  <mat-error  *ngIf="loginform.controls['Username'].invalid && loginform.controls['Username'].touched">
+                    <span *ngIf="loginform.controls['Username'].errors?.['required']">Please fill the Field !</span>
+                    <span *ngIf="loginform.controls['Username'].errors?.['pattern']">Please enter valid Username !</span>
+                    <span *ngIf="loginform.controls['Username'].errors?.['maxlength']">Username should have maximum 30 characters!</span>
+                    <span *ngIf="loginform.controls['Username'].errors?.['minlength']">Username should have minimum 15 characters !</span>
+
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="mb-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>Password</mat-label>
+                  <input  [type]="showpassword?'text':'password'" matInput formControlName="Password">
+                  <i (click)="toggleShow()" class="fa-solid fa-eye" *ngIf="!showpassword"></i>
+                 <i (click)="toggleShow()"class="fa-solid fa-eye-slash" *ngIf="showpassword"></i>
+                  <mat-error *ngIf="loginform.controls['Password'].invalid && loginform.controls['Password'].touched">
+                    <span *ngIf="loginform.controls['Password'].errors?.['required']">Please fill the Field !</span>
+                    <span *ngIf="loginform.controls['Password'].errors?.['pattern']">Please enter valid password !</span>
+                    <span *ngIf="loginform.controls['Password'].errors?.['maxlength']">Password should have maximum 30 digits!</span>
+                    <span *ngIf="loginform.controls['Password'].errors?.['minlength']">Password should have minimum 4 characters !</span>
+
+                    </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="mb-3 text-start ">
+                <!-- <a href="">Forgot Password?</a> -->
+              </div>
+              <div class="BTNlog " style="margin-right: 155px;">
+                <button class="fs-6 me-2" id="submit"  type="submit" [disabled]="loginform.invalid"   mat-raised-button (click)="login()" >Login</button>
+             <button class="btn  fs-6 "type="cancel" (click)="close()" mat-raised-button>Cancel</button>
+            </div>
+            </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+
+
+
+

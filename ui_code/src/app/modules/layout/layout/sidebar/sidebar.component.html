@@ -1,0 +1,18 @@
+
+<mat-nav-list >
+   <div class="logo py-0">
+    <img [src]="((userData?.ProfilePicture!=null)?userData?.ProfilePicture:'../../../../../assets/images/blank-profile-picture-973460__340.webp')" alt="user logo">
+    <h5 style="font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;font-size: 13px; color: white;">{{decodeToken?.UserFirstName +" "+((decodeToken?.UserMiddleName)? decodeToken?.UserMiddleName+" ":"")+""+decodeToken?.UserLastName}}</h5>
+  </div>
+  <mat-divider></mat-divider>
+  <mat-nav-list >
+    <mat-list-item  *ngFor="let menuitem of menuItems.getMenuitem()" [routerLink]="['/modules',menuitem.state]">
+        <a  routerLinkActive="selected" appAccordionToggle *ngIf="menuitem.type === 'link'">
+            <mat-icon>{{ menuitem.icon }}</mat-icon>
+            <span>{{ menuitem.name }}</span>
+            <span fxFlex></span>
+        </a>
+    </mat-list-item>
+</mat-nav-list>
+
+

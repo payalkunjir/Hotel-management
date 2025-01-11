@@ -1,0 +1,158 @@
+<div class="container">
+<div class="sticky">
+   <div class="row mt-5 text-center">
+   <div class="fieldeName col-12">
+    Detailed Allocation Report
+   </div>
+   </div>
+<form action="" [formGroup]="allocationForm">
+  <div class="row mt-5 ">
+  <div class="col-lg-2 col-md-6 col-sm-6 col-12" ><span class="material-symbols-rounded ms-5" (click)="back()">
+  keyboard_backspace
+  </span></div>
+
+  <!-- Area -->
+    <div class="col-lg-2 col-md-6 col-sm-6 col-12 ">
+      <mat-form-field >
+        <mat-label> Area </mat-label>
+        <mat-select formControlName="areaid" (selectionChange)="getAllHotelsByArea($event.value)" multiple="">
+         <mat-option  *ngFor="let item of areaData" [value]="item.AreaId">{{item.AreaName}} </mat-option>
+        </mat-select>
+        <mat-error
+        *ngIf="allocationForm.controls['areaid'].hasError('required') && (allocationForm.controls['areaid'].touched || allocationForm.controls['areaid'].dirty)">
+        <span>Area is required.</span>
+       </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- hotel-->
+     <div class="col-lg-2 col-md-6 col-sm-6 col-12  ">
+    <mat-form-field >
+      <mat-label> Hotel </mat-label>
+      <mat-select formControlName="hotelid" multiple="">
+       <mat-option  *ngFor="let hotel of hotels" [value]="hotel?.HotelId">{{hotel?.HotelName}}</mat-option>
+       </mat-select>
+       <mat-error
+       *ngIf="allocationForm.controls['hotelid'].hasError('required') && (allocationForm.controls['hotelid'].touched || allocationForm.controls['hotelid'].dirty)">
+       <span>Hotel is required.</span>
+       </mat-error>
+  </mat-form-field>
+  </div>
+  <!-- check in date input-->
+  <div class="col-lg-2 col-md-6 col-sm-6 col-12 ">
+    <mat-form-field >
+      <mat-label>Check In Date</mat-label>
+      <input matInput formControlName="CheckinDate" [matDatepicker]="picker1" >
+      <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+      <mat-datepicker #picker1></mat-datepicker>
+      <mat-error
+      *ngIf="allocationForm.controls['CheckinDate'].hasError('required') && (allocationForm.controls['CheckinDate'].touched || allocationForm.controls['CheckinDate'].dirty)">
+      <span>Check in date is required.</span>
+     </mat-error>
+    </mat-form-field>
+  </div>
+   <!-- check out date input-->
+  <div class="col-lg-2 col-md-6 col-sm-6 col-12 ">
+    <mat-form-field >
+      <mat-label>Check Out Date</mat-label>
+      <input matInput formControlName="CheckoutDate"[min]="allocationForm.controls.CheckinDate.value" [matDatepicker]="picker2" >
+      <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+      <mat-datepicker #picker2></mat-datepicker>
+      <mat-error
+      *ngIf="allocationForm.controls['CheckoutDate'].hasError('required') && (allocationForm.controls['CheckoutDate'].touched || allocationForm.controls['CheckoutDate'].dirty)">
+      <span>Check out date is required.</span>
+     </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="col-lg-2 col-md-6 col-sm-6 col-12  mt-3">
+    <button mat-raised-button class="AddText text-white" [disabled]="allocationForm.invalid" (click)="allocationReport()">Submit</button>
+  </div>
+</div>
+</form>
+</div>
+
+ <!-- //table -->
+
+    <div class="col-12 mt-3">
+      <div class="row mx-5">
+        <div class="col-md-9 col-3 col-sm-3 mb-3  text-end">
+        </div>
+        <div class="col-md-3  col-9 col-sm-9 col-xs-12  text-end " style="margin-top: 26px;">
+          <mat-form-field class="w-75">
+            <mat-label> Search</mat-label>
+              <input matInput (keyup)="Filterchange($event)">
+          </mat-form-field>
+      </div>
+      </div>
+    </div>
+
+    <div class="overflow-auto  mx-5">
+      <div class="table-wrapper col-12 mt-2" style="overflow-x: auto;;" >
+        <table mat-table [dataSource]="dataSource" class="mat-table" matSort>
+          <!-- Sr no Column -->
+          <ng-container matColumnDef="HotelId">
+            <th
+              mat-sort-header
+              class="mat-header-cell"
+              *matHeaderCellDef
+              matTooltip="Sr no">
+              Sr.no
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+
+              class="indexCell mat-cell">
+              {{ allocation.indexOf(element) + 1 }}
+            </td>
+            <!-- Participant name column -->
+          </ng-container>
+
+            <ng-container matColumnDef="ParticipantName">
+              <th  class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Hotel Category">
+               Participant Name
+              </th>
+              <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element.ParticipantFirstName }} {{ element?.ParticipantMiddleName }} {{ element?.ParticipantLastName}}</td>
+            </ng-container>
+
+            <!-- Venue name column-->
+          <ng-container matColumnDef="venuename">
+            <th  class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Hotel Address">
+            Venue Name
+            </th>
+            <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.venuename }} </td>
+          </ng-container>
+
+          <!-- Area name column -->
+          <ng-container matColumnDef="areaname">
+            <th  class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Hotel contact">
+             Area Name
+            </th>
+            <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.areaname }} </td>
+          </ng-container>
+
+          <!-- element name column -->
+          <ng-container matColumnDef="hotelname">
+            <th  class="mat-header-cell" *matHeaderCellDef mat-sort-header  matTooltip="Hotel Name" >
+             Hotel Name
+            </th>
+            <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.hotelname }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        <mat-paginator
+          class="mat-paginator"
+          #paginator
+          [length]=""
+          [pageSize]="10"c
+          [pageSizeOptions]="[5, 10, 20, 100, 1000]"
+          aria-label="Select page">
+        </mat-paginator>
+
+      </div>
+    </div>
+
+</div>

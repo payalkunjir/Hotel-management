@@ -1,0 +1,270 @@
+<div class="container">
+  <div class="sticky">
+      <div class="row"  style="margin-top: 40px">
+        <div class="col-12 text-center fieldeName">Vehicle</div>
+      </div>
+      <div class="col-12">
+        <div class="row mt-3 mx-5">
+          <div class="col-md-2 col-sm-3 col-3">
+            <button
+              mat-flat-button
+              class="AddText text-white mt-5"
+              data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop"
+              matTooltip="Add Vehicle"style="padding:20px; "
+              (click)="add()">
+              Add Vehicle
+            </button>
+          </div>
+          <div class="col-md-7 d-none d-md-block"></div>
+            <div class="col-md-3 col-sm-9 col-9 text-end mt-4" >
+              <mat-form-field class="w-75">
+                <mat-label> Search</mat-label>
+                  <input matInput (keyup)="filterchange($event)">
+              </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+      <div class="overflow-auto mx-5">
+      <div class="table-wrapper col-12 mt-2" style="overflow-x: auto;">
+        <table mat-table [dataSource]="dataSource" class="mat-table" matSort>
+          <!-- sr no Column -->
+          <ng-container matColumnDef="VehicleId">
+            <th
+            mat-sort-header
+              class="mat-header-cell"
+              *matHeaderCellDef
+              matTooltip="Sr no"
+            >
+              Sr.no
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              style="width: 7%"
+              class="indexCell mat-cell"
+            >
+              {{ vehicle.indexOf(element) + 1 }}
+            </td>
+          </ng-container>
+
+          <!-- Vehicle name Column -->
+          <ng-container matColumnDef="NameOfVehicle">
+            <th class="mat-header-cell" *matHeaderCellDef mat-sort-header  matTooltip="Vehicle Name" >
+              Vehicle Name
+            </th>
+            <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.NameOfVehicle }}</td>
+          </ng-container>
+
+          <!-- Vehicle code Column -->
+          <ng-container matColumnDef="TypeOfVehicle">
+            <th  class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Vehicle Code">
+             Type Of Vehicle
+            </th>
+            <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.TypeOfVehicle }} </td>
+          </ng-container>
+
+          <!--Vehicle number-->
+          <ng-container matColumnDef="VehicleNo">
+            <th  class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Vehicle Number">
+              Vehicle Liscence Number
+            </th>
+            <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.VehicleNo }} </td>
+          </ng-container>
+          <!-- action buttons -->
+          <ng-container matColumnDef="action">
+            <th  class="mat-header-cell text-center" *matHeaderCellDef colspan="12">
+              Action
+            </th>
+            <td mat-cell *matCellDef="let element" style="width: 15%" class="mat-cell actionBtn text-center">
+              <button mat-button
+                *ngIf="element?.IsDeleted == 0"
+                color="primary"
+                data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop"
+                matTooltip="Edit"
+                (click)="updateVehicle(element)" >
+                <i class="fa-regular fa-pen-to-square"></i>
+              </button>
+              <span *ngIf="element?.IsDeleted == 0; else restore">
+                <button
+                  mat-button
+                  color="warn"
+                  matTooltip="Delete"
+                  (click)="deleteVehicle(element, '0', 'delete')">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </span>
+              <ng-template #restore>
+                <button
+                  mat-button
+                  color="warn"
+                  matTooltip="Restore"
+                  (click)="deleteVehicle(element, '1', 'restore')" >
+                  <i class="fa-solid fa-arrow-rotate-left"></i>
+                </button>
+              </ng-template>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+        <!-- for pagination. -->
+        <mat-paginator
+          class="mat-paginator"
+          #paginator
+          [length]="vehicle.length"
+          [pageSize]="10"
+          [pageSizeOptions]="[5, 10, 20, 100, 1000]"
+          aria-label="Select page">
+        </mat-paginator>
+
+      </div>
+</div>
+
+  <!-- modal form -->
+  <div
+    class="modal fade"
+    id="staticBackdrop"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-md modal-dialog-scrollable m-auto">
+      <div class="modal-content rounded-0 p-0 w-100 mt-5" style="margin: 90px">
+        <div class="modal-body">
+          <div class="text-end">
+            <button
+              #closeModal
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              (click)="close()"
+            ></button>
+          </div>
+          <fieldset class="border p-2">
+            <legend class="float-none w-auto p-2" style="color:rgb(154, 30, 30);font-family: Poppins, sans-serif;">
+              {{ isUpdate ? "Update Vehicle" : "Add Vehicle" }}
+            </legend>
+            <div class="container-fluid p-4 pt-2 ps-2 pe-2">
+              <form action="" [formGroup]="VehicleForm">
+                <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-12 text-center">
+                    <mat-form-field class="w-75" >
+                      <mat-label>Vehicle Name</mat-label>
+                      <input matInput formControlName="NameOfVehicle" />
+                    <mat-error
+                    *ngIf="VehicleForm.controls['NameOfVehicle'].hasError('required') && (VehicleForm.controls['NameOfVehicle'].touched || VehicleForm.controls['NameOfVehicle'].dirty)">
+
+                    <span>Vehicle name is required.</span>
+                  </mat-error>
+                    <mat-error
+                    *ngIf="VehicleForm.controls['NameOfVehicle'].hasError('pattern')">
+                    <span>Please enter valid vehicle name.</span>
+                    </mat-error>
+                    <mat-error
+                    *ngIf="VehicleForm.controls['NameOfVehicle'].hasError('maxlength')">
+                    <span>Length should not be greater than 30 characters.</span>
+                    </mat-error>
+                    <mat-error
+                    *ngIf="VehicleForm.controls['NameOfVehicle'].hasError('minlength')">
+                    <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                    </mat-form-field>
+                    </div>
+                  <br>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-12 text-center">
+                    <mat-form-field class="w-75">
+                      <mat-label>Type Of Vehicle </mat-label>
+                      <input
+                        matInput
+                        formControlName="TypeOfVehicle"
+                        (keyup)="hasError(VehicleForm.controls['TypeOfVehicle'])"
+                      />
+                      <mat-error
+                      *ngIf="VehicleForm.controls['TypeOfVehicle'].hasError('required') && VehicleForm.controls['TypeOfVehicle'].touched">
+
+                      <span>Vehicle code is required.</span>
+                    </mat-error>
+                      <mat-error
+                      *ngIf="VehicleForm.controls['TypeOfVehicle'].hasError('pattern')">
+                      <span>Please enter valid vehicle code.</span>
+                      </mat-error>
+                      <mat-error
+                      *ngIf="VehicleForm.controls['TypeOfVehicle'].hasError('maxlength')">
+                      <span>Length should not be greater than 10 characters.</span>
+                      </mat-error>
+                      <mat-error
+                    *ngIf="VehicleForm.controls['TypeOfVehicle'].hasError('minlength')">
+                    <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                    </mat-form-field>
+
+                  </div>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-12 text-center mt-3">
+                    <mat-form-field class="w-75">
+                      <mat-label>Vehicle Liscence Number</mat-label>
+                      <input
+                        matInput
+                        formControlName="VehicleNo"
+                        (keyup)="hasError(VehicleForm.controls['VehicleNo'])"
+                      />
+                      <mat-error
+                      *ngIf="VehicleForm.controls['VehicleNo'].hasError('required') && VehicleForm.controls['VehicleNo'].touched">
+
+                      <span> Liscence no. is required.</span>
+                    </mat-error>
+                      <mat-error
+                      *ngIf="VehicleForm.controls['VehicleNo'].hasError('pattern')">
+                      <span>Please enter valid liscence no.</span>
+                      </mat-error>
+                      <mat-error
+                      *ngIf="VehicleForm.controls['VehicleNo'].hasError('maxlength')">
+                      <span>Length should not be greater than 20 characters.</span>
+                      </mat-error>
+                      <mat-error
+                    *ngIf="VehicleForm.controls['VehicleNo'].hasError('minlength')">
+                    <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                    </mat-form-field>
+                  </div>
+                    <div class=" col-lg-12 col-md-12 col-sm-6 col-12 mt-4 text-end">
+                      <button
+                        mat-flat-button
+                        color="primary"
+                        class="m-1"
+                        (click)="isUpdate ? updateVehicleData() : vehicleSumbit()"
+                        [disabled]="VehicleForm.invalid"
+                      >
+                        {{ isUpdate ? "Update" : "Submit" }}
+                      </button>
+                      <button
+                        mat-flat-button
+                        color="warn"
+                        #closeModal
+                        type="button"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                        (click)="close()"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+
+                <!-- </div> -->
+              </form>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  </div>

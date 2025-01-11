@@ -1,0 +1,249 @@
+<div class="container">
+  <div class="sticky">
+    <div class="row" style="margin-top: 40px">
+      <div class="col-12 text-center fieldeName">User</div>
+    </div>
+    <div class="col-12">
+      <div class="row mt-3 mx-5">
+        <div class="col-md-2 col-sm-3 col-3 ">
+          <button mat-flat-button class="AddText text-white mt-5" data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop" matTooltip="Add User" style="padding:20px" (click)="add()">
+            Add User
+          </button>
+        </div>
+        <div class="col-md-7 d-none d-md-block"></div>
+        <div class="col-md-3 col-sm-9 col-9 text-end mt-4" >
+          <mat-form-field class="w-75 ">
+            <mat-label> Search</mat-label>
+            <input matInput (keyup)="filterchange($event)">
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="overflow-auto  mx-5">
+    <div class="table-wrapper col-12 mt-2" style="overflow-x: auto;">
+      <table mat-table [dataSource]="dataSource" class="mat-table" matSort>
+        <!-- sr no Column -->
+        <ng-container matColumnDef="UserId">
+          <th mat-sort-header class="mat-header-cell" *matHeaderCellDef matTooltip="Sr no">
+            Sr.no
+          </th>
+          <td mat-cell *matCellDef="let element" style="width: 7%" class="indexCell mat-cell ">
+            {{user.indexOf(element) + 1 }}
+          </td>
+        </ng-container>
+
+        <!-- User name Column -->
+        <ng-container matColumnDef="UserName">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="User Name">
+            User Name
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.UserFirstName }} {{
+            element?.UserMiddleName }} {{ element?.UserLastName }}</td>
+        </ng-container>
+
+        <!-- Email Column -->
+        <ng-container matColumnDef="UserEmail">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="User Email">
+            Email/Username
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.UserEmail }} </td>
+        </ng-container>
+
+        <!--Contact number-->
+        <ng-container matColumnDef="UserContactNo">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Contact Number">
+            Contact No.
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.UserContactNo }} </td>
+        </ng-container>
+        <!-- action buttons -->
+        <ng-container matColumnDef="action">
+          <th class="mat-header-cell text-center" *matHeaderCellDef colspan="12">
+            Action
+          </th>
+          <td mat-cell *matCellDef="let element" style="width: 15%" class="mat-cell actionBtn text-center">
+            <button mat-button *ngIf="element?.IsDeleted == 0" color="primary" data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop" matTooltip="Edit" (click)="updateUser(element)">
+              <i class="fa-regular fa-pen-to-square"></i>
+            </button>
+            <span *ngIf="element?.IsDeleted == 0; else restore">
+              <button mat-button color="warn" matTooltip="Delete" (click)="deleteUser(element, '0', 'delete')">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </span>
+            <ng-template #restore>
+              <button mat-button color="warn" matTooltip="Restore" (click)="deleteUser(element, '1', 'restore')">
+                <i class="fa-solid fa-arrow-rotate-left"></i>
+              </button>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky:true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+    <!-- for pagination. -->
+
+    <mat-paginator class="mat-paginator" #paginator [length]="user.length" [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 20, 100, 1000]" aria-label="Select page">
+    </mat-paginator>
+
+
+  </div>
+</div>
+
+<!-- modal form -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-scrollable m-auto">
+    <div class="modal-content rounded-0 p-0 w-100 mt-5" style="margin: 90px">
+      <div class="modal-body">
+        <div class="text-end">
+          <button #closeModal type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="close()"></button>
+        </div>
+        <fieldset class="border p-2">
+          <legend class="float-none w-auto p-2" style="color:rgb(154, 30, 30)">
+            {{ isUpdate ? "Update User" : "Add User" }}
+          </legend>
+          <div class="container-fluid p-4 pt-2 ps-2 pe-2">
+            <form action="" [formGroup]="UserForm">
+              <div class="row">
+                <div class=" col-lg-4 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field>
+                    <mat-label>First Name</mat-label>
+                    <input matInput formControlName="UserFirstName" />
+                    <mat-error
+                      *ngIf="UserForm.controls['UserFirstName'].hasError('required') && (UserForm.controls['UserFirstName'].touched || UserForm.controls['UserFirstName'].dirty)">
+
+                      <span>User first name is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="UserForm.controls['UserFirstName'].hasError('pattern')">
+                      <span>Please enter valid first name.</span>
+                    </mat-error>
+                    <mat-error *ngIf="UserForm.controls['UserFirstName'].hasError('maxlength')">
+                      <span>Length should not be greater than 15 characters.</span>
+                    </mat-error>
+                    <mat-error *ngIf="UserForm.controls['UserFirstName'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field>
+                    <mat-label> Middle Name</mat-label>
+                    <input matInput formControlName="UserMiddleName" />
+                    <mat-error
+                      *ngIf="UserForm.controls['UserMiddleName'].hasError('required') && (UserForm.controls['UserMiddleName'].touched || UserForm.controls['UserMiddleName'].dirty)">
+
+                      <span> User middle name is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="UserForm.controls['UserMiddleName'].hasError('pattern')">
+                      <span>Please enter valid user middle name.</span>
+                    </mat-error>
+                    <mat-error *ngIf="UserForm.controls['UserMiddleName'].hasError('maxlength')">
+                      <span>Length should not be greater than 15 characters.</span>
+                    </mat-error>
+                    <mat-error *ngIf="UserForm.controls['UserMiddleName'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-6 col-12  text-center mt-3">
+                  <mat-form-field>
+                    <mat-label> Last Name</mat-label>
+                    <input matInput formControlName="UserLastName" />
+                    <mat-error
+                      *ngIf="UserForm.controls['UserLastName'].hasError('required') && (UserForm.controls['UserLastName'].touched || UserForm.controls['UserLastName'].dirty)">
+
+                      <span> User last name is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="UserForm.controls['UserLastName'].hasError('pattern')">
+                      <span>Please enter valid user last name.</span>
+                    </mat-error>
+                    <mat-error *ngIf="UserForm.controls['UserLastName'].hasError('maxlength')">
+                      <span>Length should not be greater than 15 characters.</span>
+                    </mat-error>
+                    <mat-error *ngIf="UserForm.controls['UserLastName'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-6 col-12 text-center mt-3 ">
+                  <mat-form-field>
+                    <mat-label>Email/UserName </mat-label>
+                    <input matInput formControlName="UserEmail" (keyup)="hasError(UserForm.controls['UserEmail'])" />
+                    <mat-error
+                      *ngIf="UserForm.controls['UserEmail'].hasError('required') && UserForm.controls['UserEmail'].touched">
+
+                      <span>User email is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="UserForm.controls['UserEmail'].hasError('pattern')">
+                      <span>Please enter valid user Email.</span>
+                    </mat-error>
+                    <mat-error *ngIf="UserForm.controls['UserEmail'].hasError('maxlength')">
+                      <span>Length should not be greater than 30 characters.</span>
+                    </mat-error>
+                    <mat-error *ngIf="UserForm.controls['UserEmail'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-6 col-12 text-center mt-3 ">
+                  <mat-form-field>
+                    <mat-label>User Contact No.</mat-label>
+                    <input matInput formControlName="UserContactNo"
+                      (keyup)="hasError(UserForm.controls['UserContactNo'])" />
+                    <mat-error
+                      *ngIf="UserForm.controls['UserContactNo'].hasError('required') && UserForm.controls['UserContactNo'].touched">
+
+                      <span>User contact No is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="UserForm.controls['UserContactNo'].hasError('pattern')">
+                      <span>Please enter valid user contact no.</span>
+                    </mat-error>
+                    <mat-error *ngIf="UserForm.controls['UserContactNo'].hasError('maxlength')">
+                      <span>Length should not be greater than 10 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div  class="col-lg-4 col-md-6 col-sm-6 col-12 text-center mt-4">
+                  <div [ngStyle]="imageColor" class="chooseFile">
+                    <input id="hotelImage" #hotelImage  type="file"
+                  (change)="onFileChange($event)">
+
+                  </div>
+                  <div class="uploadLabel"><label id="fileLabel" class="fileLabel" *ngIf="!selectedFile"></label></div>
+
+
+                  <!-- <input type="file" id="file-upload" class="form-control"  #hotelImage (change)="onFileChange($event)" />
+                   <label for="file-upload" *ngIf="!selectedFile">Upload file</label>
+                   <div id="file-upload-filename"><label id="fileLabel" *ngIf="!selectedFile"></label></div> -->
+                </div>
+
+
+                <div class="col-lg-12 col-md-6 col-sm-6 col-12 mt-5 text-end">
+                  <button mat-flat-button color="primary" class="m-1" (click)="submitData()"
+                    [disabled]="UserForm.invalid">
+                    {{ isUpdate ? "Update" : "Submit" }}
+                  </button>
+                  <button mat-flat-button color="warn" #closeModal type="button" data-bs-dismiss="modal"
+                    aria-label="Close" (click)="close()">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,123 @@
+.d-block {
+    height: 600px;
+}
+
+/* .container {} */
+
+.btn {
+    background-color: darkorange;
+    color: #fff;
+    font-size: 20px;
+}
+
+h5 {
+    font-family: 'Playfair Display', cursive;
+    font-size: 40px;
+    margin-top: -300px;
+}
+
+.card-title {
+    font-family: monospace;
+    font-size: 30px;
+    color: orange;
+}
+
+.category {
+    margin-left: 10px;
+}
+
+.address {
+    margin-top: 20px;
+    font-size: 25px;
+
+}
+
+.area {
+    font-size: 25px;
+    margin-top: 15px;
+
+}
+
+.contact {
+    margin-top: 20px;
+}
+
+.show1 {
+    position: absolute;
+    bottom: 10px !important;
+    right: 120px !important;
+    padding: 10px 10px;
+    border-radius: 7px;
+    border: none;
+    background-color: #fea116;
+    color: #fff;
+    cursor: pointer;
+    transition: .5s;
+    width: 100px !important;
+    height: 40px !important;
+    font-size: 15px !important;
+}
+
+.show1:hover {
+    background-color: transparent;
+    outline: 2px solid orange;
+    color: orange;
+    transform: scale(1.0);
+}
+
+.container1 {
+    margin-left: 10%;
+}
+
+.card {
+    box-shadow: 5px 5px 5px 5px rgba(128, 128, 128, 0.253);
+    max-width: 1000px;
+}
+
+.modal {
+    margin-top: -60px;
+    /* --bs-modal-width: 1000px; */
+    --bs-modal-width: 1200px;
+
+}
+
+@media screen and (max-width:600px) {
+    .d-block {
+        height: 400px;
+    }
+
+    .card {
+        box-shadow: 5px 5px 5px 5px rgba(128, 128, 128, 0.253);
+        margin-left: -20px;
+    }
+
+    .image {
+        margin-left: 11px;
+        width: 150%;
+        height: 150px;
+        margin: 0px;
+    }
+
+    .show1 {
+        position: absolute;
+        bottom: 10px !important;
+        right: 20px !important;
+        padding: 10px 10px;
+        border-radius: 7px;
+        border: none;
+        background-color: #fea116;
+        color: #fff;
+        cursor: pointer;
+        transition: .5s;
+        width: 100px !important;
+        height: 40px !important;
+        font-size: 15px !important;
+    }
+
+    .show1:hover {
+        background-color: transparent;
+        outline: 2px solid orange;
+        color: orange;
+        transform: scale(1.0);
+    }
+}

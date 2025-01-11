@@ -1,0 +1,831 @@
+<div class="container">
+  <div class="sticky">
+    <div class="row" style="margin-top: 40px">
+      <div class="col-12 text-center fieldeName"> Participant</div>
+    </div>
+    <div class="col-12 ">
+      <div class="row mt-3 mx-5">
+        <div class="col-md-2 col-sm-3 col-3">
+          <button
+            mat-flat-button
+            class="AddText text-white mt-5"
+            data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop"
+            matTooltip="Add Participant" style="padding:20px"
+            (click)="add()">
+            Add Participant
+          </button>
+        </div>
+        <div class="col-md-7 d-none d-md-block"></div>
+        <div class="col-md-3 col-sm-9 col-9 text-end mt-4">
+          <mat-form-field class="w-75">
+            <mat-label> Search</mat-label>
+              <input matInput (keyup)="Filterchange($event)">
+          </mat-form-field>
+      </div>
+      </div>
+    </div>
+  </div>
+<div class="overflow-auto text-center mx-5">
+    <div class="table-wrapper col-12 mt-2 " style="overflow-x: auto;">
+      <table mat-table [dataSource]="dataSource" class="mat-table" matSort>
+        <ng-container matColumnDef="Srno">
+          <th
+          mat-sort-header
+            class="mat-header-cell"
+            *matHeaderCellDef
+            matTooltip="Sr no">
+            Sr.no
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            mat-sort-header
+            class="indexCell mat-cell"
+          >
+            {{ participant.indexOf(element) + 1 }}
+          </td>
+        </ng-container>
+
+        <!--Participant First name Column -->
+        <ng-container matColumnDef="ParticipantName">
+          <th  class="mat-header-cell" *matHeaderCellDef mat-sort-header  matTooltip=" Participant First name" >
+            Participant Name
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.ParticipantFirstName}} {{ element?.ParticipantMiddleName}}  {{ element?.ParticipantLastName}}</td>
+        </ng-container>
+
+
+          <!--Identity no.. Column -->
+          <ng-container matColumnDef="IdentityNo">
+            <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Identity no.">
+              Identity No.
+            </th>
+            <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.IdentityNo }} </td>
+          </ng-container>
+
+            <!--Designation Column -->
+        <ng-container matColumnDef="DesignationId">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Designation">
+            Designation
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.DesignationName }} </td>
+        </ng-container>
+
+        <!--Contact no. Column -->
+        <ng-container matColumnDef="ContactNo">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Contact no.">
+            Contact No.
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.ContactNo }} </td>
+        </ng-container>
+
+         <!--State Column -->
+         <ng-container matColumnDef="State">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="State">
+            State
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.State }} </td>
+        </ng-container>
+
+
+          <!--Guest Category Id Column -->
+          <ng-container matColumnDef="GuestCategoryId">
+            <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Guest Category Id">
+              Guest Category
+            </th>
+            <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.GuestCategoryName }} </td>
+          </ng-container>
+
+            <!--Expected Arrival Time Column -->
+        <ng-container matColumnDef="ExpectedArrivalTime">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Expected Arrival Time">
+            Expected Arrival Time
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.ExpectedArrivalTime}} </td>
+        </ng-container>
+
+          <!--Expected Departure Time Column -->
+          <ng-container matColumnDef="ExpectedDepartureTime">
+            <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Expected Departure Time">
+              Expected Departure Time
+            </th>
+            <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.ExpectedDepartureTime }} </td>
+          </ng-container>
+
+            <!--Check In Time Column -->
+        <ng-container matColumnDef="CheckInTime">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header  matTooltip="Check In Time" >
+            Check In Time
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.CheckinTime  }}</td>
+        </ng-container>
+
+         <!--Check In Date Column -->
+         <ng-container matColumnDef="CheckInDate">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header  matTooltip="Check In Date" >
+            Check In Date
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.CheckinDate | date:'dd-MM-yyyy' }}</td>
+        </ng-container>
+
+
+           <!--Check Out Time Column -->
+           <ng-container matColumnDef="CheckOutTime">
+            <th class="mat-header-cell" *matHeaderCellDef mat-sort-header  matTooltip="Check Out Time" >
+            Check Out Time
+             </th>
+             <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.CheckoutTime  }}</td>
+            </ng-container>
+
+               <!--Check out Date Column -->
+               <ng-container matColumnDef="CheckOutDate">
+                <th class="mat-header-cell" *matHeaderCellDef mat-sort-header  matTooltip="Check out Date" >
+                  Check out Date
+                </th>
+                <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.CheckoutDate  | date:'dd-MM-yyyy'}}</td>
+              </ng-container>
+
+
+          <!--Venue Column -->
+        <ng-container matColumnDef="VenueId">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header  matTooltip="Venue" >
+           Venue
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.VenueName }}</td>
+        </ng-container>
+
+          <!--Hotel Column -->
+        <ng-container matColumnDef="HotelId">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header  matTooltip="Hotel" >
+            Hotel
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.HotelName }}</td>
+        </ng-container>
+
+          <!--Alloted Room no. Column -->
+          <ng-container matColumnDef="AllotedRoomNo">
+            <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Alloted Room no.">
+              Alloted Room No.
+            </th>
+            <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.AllotedRoomNo }} </td>
+          </ng-container>
+
+            <!--Type Column -->
+        <ng-container matColumnDef="OccupanyType">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Type">
+            Type
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.OccupanyType }} </td>
+        </ng-container>
+
+        <!--LO FirstName Column -->
+        <ng-container matColumnDef="LOName">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="LO Name">
+            LO Name
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.LOFirstName }} {{ element?.LOMiddleName }} {{ element?.LOLastName }}</td>
+        </ng-container>
+
+
+            <!--Identity no. Of LO Column -->
+        <ng-container matColumnDef="IdentityNoOfLO">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Identity no. Of LO">
+            Identity No. Of LO
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.IdentityNoOfLO }} </td>
+        </ng-container>
+
+          <!--Contact no. Of LO Column -->
+          <ng-container matColumnDef="ContactNoOfLO">
+            <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Contact no. Of LO">
+              Contact No. Of LO
+            </th>
+            <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.ContactNoOfLO }} </td>
+          </ng-container>
+
+          <!--Vehicle Column -->
+        <ng-container matColumnDef="VehicleId">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Vehicle">
+            Vehicle
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.NameOfVehicle }} </td>
+        </ng-container>
+
+          <!--Alloted Vehicle Column -->
+          <ng-container matColumnDef="AllotedVehicle">
+            <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Alloted Vehicle">
+              Alloted Vehicle
+            </th>
+            <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.AllotedVehicle }} </td>
+          </ng-container>
+
+           <!--Driver Column -->
+           <ng-container matColumnDef="DriverId">
+            <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Driver">
+              Driver
+            </th>
+            <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.DriverName }} </td>
+          </ng-container>
+
+        <!-- action buttons -->
+        <ng-container matColumnDef="action">
+          <th class="mat-header-cell" *matHeaderCellDef colspan="12">
+            Action
+          </th>
+          <td mat-cell *matCellDef="let element"  class="mat-cell actionBtn ">
+            <button mat-button
+              *ngIf="element?.IsDeleted == 0"
+              color="primary"
+              data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop"
+              matTooltip="Edit"
+              (click)="updateParticipant(element)" >
+              <i class="fa-regular fa-pen-to-square"></i>
+            </button>
+            <span *ngIf="element?.IsDeleted == 0; else restore">
+              <button
+                mat-button
+                color="warn"
+                matTooltip="Delete"
+                (click)="deleteParticipant(element, '0', 'delete')">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </span>
+            <ng-template #restore>
+              <button
+                mat-button
+                color="warn"
+                matTooltip="Restore"
+                (click)="deleteParticipant(element, '1', 'restore')" >
+                <i class="fa-solid fa-arrow-rotate-left"></i>
+              </button>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky:true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+      </div>
+      <!-- for pagination. -->
+      <mat-paginator
+        class="mat-paginator"
+        #paginator
+        [length]="participant.length"
+        [pageSize]="10"
+        [pageSizeOptions]="[5, 10, 20, 100, 1000]"
+        aria-label="Select page">
+      </mat-paginator>
+    </div>
+</div>
+
+<!-- modal form -->
+<div
+  class="modal fade"
+  id="staticBackdrop"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+
+>
+  <div class="modal-dialog modal-md modal-dialog-scrollable m-auto" >
+    <div class="modal-content rounded-0 p-0 " style="margin: 80px; ">
+      <div class="modal-body">
+        <div class="text-end">
+          <button
+            #closeModal
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+          ></button>
+        </div>
+        <fieldset class="border p-1">
+          <legend class="float-none w-auto p-1" style="color:rgb(154, 30, 30);font-family: Poppins, sans-serif;">
+            {{ isUpdate ? "Update Participant" : "Add Participant" }}
+          </legend>
+          <div class="container-fluid p-5 pt-1 ps-2 pe-2">
+            <form action="" [formGroup]="participantForm">
+              <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left" >
+                    <mat-label >Participant First Name</mat-label>
+                    <input matInput formControlName="ParticipantFirstName" />
+                  <mat-error
+                  *ngIf="participantForm.controls['ParticipantFirstName'].hasError('required') && (participantForm.controls['ParticipantFirstName'].touched || participantForm.controls['ParticipantFirstName'].dirty)">
+                  <span>Participant first name is required.</span>
+                 </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['ParticipantFirstName'].hasError('pattern')">
+                  <span>Please enter valid participant first name.</span>
+                  </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['ParticipantFirstName'].hasError('maxlength')">
+                  <span>Length should not be greater than 15 characters.</span>
+                  </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['ParticipantFirstName'].hasError('minlength')">
+                  <span>Length should not be less than 2 characters.</span>
+                  </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center  mt-3">
+                  <mat-form-field class="text-left" >
+                    <mat-label>Participant Middle Name</mat-label>
+                    <input matInput formControlName="ParticipantMiddleName" />
+                  <mat-error
+                  *ngIf="participantForm.controls['ParticipantMiddleName'].hasError('required') && (participantForm.controls['ParticipantMiddleName'].touched || participantForm.controls['ParticipantMiddleName'].dirty)">
+                  <span>Participant middle name is required.</span>
+                 </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['ParticipantMiddleName'].hasError('pattern')">
+                  <span>Please enter valid Participant middle name.</span>
+                  </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['ParticipantMiddleName'].hasError('maxlength')">
+                  <span>Length should not be greater than 15 characters.</span>
+                  </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['ParticipantMiddleName'].hasError('minlength')">
+                  <span>Length should not be less than 2 characters.</span>
+                  </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left" >
+                    <mat-label>Participant Last Name</mat-label>
+                    <input
+                      matInput
+                      formControlName="ParticipantLastName"
+                      (keyup)="hasError(participantForm.controls['ParticipantLastName'])"
+                    />
+                    <mat-error
+                    *ngIf="participantForm.controls['ParticipantLastName'].hasError('required') && participantForm.controls['ParticipantLastName'].touched">
+
+                    <span>Participant last name is required.</span>
+                  </mat-error>
+                    <mat-error
+                    *ngIf="participantForm.controls['ParticipantLastName'].hasError('pattern')">
+                    <span>Please enter valid Participant last name.</span>
+                    </mat-error>
+                    <mat-error
+                    *ngIf="participantForm.controls['ParticipantLastName'].hasError('maxlength')">
+                    <span>Length should not be greater than 15 characters.</span>
+                    </mat-error>
+                    <mat-error
+                    *ngIf="participantForm.controls['ParticipantLastName'].hasError('minlength')">
+                    <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left" >
+                    <mat-label>Identity No.</mat-label>
+                    <input
+                      matInput
+                      formControlName="IdentityNo"
+                      (keyup)="hasError(participantForm.controls['IdentityNo'])"
+                    />
+                    <mat-error
+                    *ngIf="participantForm.controls['IdentityNo'].hasError('required') && participantForm.controls['IdentityNo'].touched">
+                    <span>Identity no. is required.</span>
+                  </mat-error>
+                    <mat-error
+                    *ngIf="participantForm.controls['IdentityNo'].hasError('pattern')">
+                    <span>Please enter valid identity no..</span>
+                    </mat-error>
+                    <mat-error
+                    *ngIf="participantForm.controls['IdentityNo'].hasError('maxlength')">
+                    <span>Length should not be greater than 10 characters.</span>
+                    </mat-error>
+                    <mat-error
+                    *ngIf="participantForm.controls['IdentityNo'].hasError('minlength')">
+                    <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field  class="text-left">
+                    <mat-label> Designation </mat-label>
+                    <mat-select formControlName="DesignationId" >
+                     <mat-option  *ngFor="let item of getDesignations" [value]="item?.DesignationId">{{item?.DesignationName}}</mat-option>
+                     </mat-select>
+                     <mat-error
+                     *ngIf="participantForm.controls['DesignationId'].hasError('required') && (participantForm.controls['DesignationId'].touched || participantForm.controls['DesignationId'].dirty)">
+                     <span>Designation is required.</span>
+                    </mat-error>
+                </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left" >
+                    <mat-label> Contact No </mat-label>
+                    <input matInput formControlName="ContactNo" />
+                  <mat-error
+                  *ngIf="participantForm.controls['ContactNo'].hasError('required') && (participantForm.controls['ContactNo'].touched || participantForm.controls['ContactNo'].dirty)">
+                  <span> Contact no. is required.</span>
+                 </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['ContactNo'].hasError('pattern')">
+                  <span>Please enter valid contact no. only.</span>
+                  </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['ContactNo'].hasError('maxlength')">
+                  <span>Length should not be greater than 10 characters.</span>
+                  </mat-error>
+                  </mat-form-field>
+                </div>
+
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field >
+                    <mat-label> State </mat-label>
+                    <mat-select formControlName="State" >
+                     <mat-option  *ngFor="let state of stateData" [value]="state?.name">{{state?.name}}</mat-option>
+                     </mat-select>
+                     <mat-error
+                    *ngIf="participantForm.controls['State'].hasError('required') && participantForm.controls['State'].touched">
+                    <span>State is required.</span>
+                  </mat-error>
+                </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field >
+                    <mat-label>Guest Category</mat-label>
+                    <mat-select formControlName="GuestCategoryId" >
+                     <mat-option  *ngFor="let item of getGuestCategories" [value]="item?.GuestCategoryId">{{item?.GuestCategoryName}}</mat-option>
+                     </mat-select>
+                     <mat-error
+                     *ngIf="participantForm.controls['GuestCategoryId'].hasError('required') && (participantForm.controls['GuestCategoryId'].touched || participantForm.controls['GuestCategoryId'].dirty)">
+                     <span>Guest category is required.</span>
+                    </mat-error>
+                </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left" >
+                    <mat-label>Expected Arrival Time</mat-label>
+                     <input matInput [ngxMatTimepicker]="picker"  formControlName="ExpectedArrivalTime">
+                     <ngx-mat-timepicker #picker></ngx-mat-timepicker>
+                    <mat-error
+                    *ngIf="participantForm.controls['ExpectedArrivalTime'].hasError('required') && participantForm.controls['ExpectedArrivalTime'].touched">
+                    <span>Expected arrival time is required.</span>
+                  </mat-error>
+                  </mat-form-field>
+
+                </div>
+
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left" >
+                    <mat-label>Expected Departure Time</mat-label>
+                     <input matInput [ngxMatTimepicker]="picker11"  formControlName="ExpectedDepartureTime">
+                     <ngx-mat-timepicker #picker11></ngx-mat-timepicker>
+                    <mat-error
+                    *ngIf="participantForm.controls['ExpectedDepartureTime'].hasError('required') && participantForm.controls['ExpectedDepartureTime'].touched">
+                    <span>Expected departure time is required.</span>
+                  </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left" >
+                    <mat-label>Check In Date</mat-label>
+                    <input matInput formControlName="CheckinDate" [matDatepicker]="picker1" (keyup)="hasError(participantForm.controls['CheckinDate'])">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                    <mat-error
+                    *ngIf="participantForm.controls['CheckinDate'].hasError('required') && participantForm.controls['CheckinDate'].touched">
+                    <span>Check in date is required.</span>
+                  </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left" >
+                    <mat-label>Check In Time</mat-label>
+                     <input  matInput  [ngxMatTimepicker]="picker2"   formControlName="CheckinTime">
+                     <ngx-mat-timepicker #picker2></ngx-mat-timepicker>
+                    <mat-error
+                    *ngIf="participantForm.controls['CheckinTime'].hasError('required') && participantForm.controls['CheckinTime'].touched">
+                    <span>Check in time is required.</span>
+                  </mat-error>
+                  </mat-form-field>
+                </div>
+
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left" >
+                    <mat-label>Check Out Date</mat-label>
+                    <input matInput formControlName="CheckoutDate" [min]="participantForm.controls.CheckinDate.value" [matDatepicker]="picker4" (keyup)="hasError(participantForm.controls['CheckoutDate'])">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker4"></mat-datepicker-toggle>
+                    <mat-datepicker #picker4></mat-datepicker>
+                    <mat-error
+                    *ngIf="participantForm.controls['CheckoutDate'].hasError('required') && participantForm.controls['CheckoutDate'].touched">
+                    <span>Check out date is required.</span>
+                  </mat-error>
+                  </mat-form-field>
+                </div>
+
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left" >
+                    <mat-label>Check Out Time</mat-label>
+                     <input matInput [ngxMatTimepicker]="picker3"  formControlName="CheckoutTime" >
+                     <ngx-mat-timepicker #picker3></ngx-mat-timepicker>
+                    <mat-error
+                    *ngIf="participantForm.controls['CheckoutTime'].hasError('required') && participantForm.controls['CheckoutTime'].touched">
+                    <span>Check out time is required.</span>
+                  </mat-error>
+                  </mat-form-field>
+                </div>
+
+
+              <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                <mat-form-field >
+                  <mat-label> Venue </mat-label>
+                  <mat-select formControlName="VenueId" >
+                   <mat-option  *ngFor="let item of getVenue" [value]="item?.VenueId">{{item?.VenueName}}</mat-option>
+                   </mat-select>
+                   <mat-error
+                   *ngIf="participantForm.controls['VenueId'].hasError('required') && (participantForm.controls['VenueId'].touched || participantForm.controls['VenueId'].dirty)">
+                   <span>Venue is required.</span>
+                  </mat-error>
+              </mat-form-field>
+              </div>
+
+              <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+              <mat-form-field >
+                <mat-label> Area </mat-label>
+                <mat-select formControlName="AreaId" (selectionChange)="getAllHotelsByArea($event.value)">
+                 <mat-option  *ngFor="let item of areaData" [value]="item.AreaId">{{item.AreaName}} </mat-option>
+                </mat-select>
+                <mat-error
+                *ngIf="participantForm.controls['AreaId'].hasError('required') && (participantForm.controls['AreaId'].touched || participantForm.controls['AreaId'].dirty)">
+                <span>Area is required.</span>
+               </mat-error>
+              </mat-form-field>
+            </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field >
+                    <mat-label> Hotel </mat-label>
+                    <mat-select formControlName="HotelId">
+                     <mat-option  *ngFor="let hotel of hotels" [value]="hotel?.HotelId">{{hotel?.HotelName}}</mat-option>
+                     </mat-select>
+                     <mat-error
+                     *ngIf="participantForm.controls['HotelId'].hasError('required') && (participantForm.controls['HotelId'].touched || participantForm.controls['HotelId'].dirty)">
+                     <span>Hotel is required.</span>
+                     </mat-error>
+                </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field >
+                    <mat-label>Vehicle </mat-label>
+                    <mat-select formControlName="VehicleId" >
+                     <mat-option  *ngFor="let item of getVehicles" [value]="item?.VehicleId">{{item?.NameOfVehicle}}</mat-option>
+                     </mat-select>
+                     <mat-error
+                     *ngIf="participantForm.controls['VehicleId'].hasError('required') && (participantForm.controls['VehicleId'].touched || participantForm.controls['VehicleId'].dirty)">
+                     <span>Vehicle is required.</span>
+                    </mat-error>
+                </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field >
+                    <mat-label>Driver </mat-label>
+                    <mat-select formControlName="DriverId" >
+                     <mat-option  *ngFor="let item of getDrivers" [value]="item?.DriverId">{{item?.DriverName}}</mat-option>
+                     </mat-select>
+                     <mat-error
+                     *ngIf="participantForm.controls['DriverId'].hasError('required') && (participantForm.controls['DriverId'].touched || participantForm.controls['DriverId'].dirty)">
+                     <span>Driver is required.</span>
+                    </mat-error>
+                </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left" >
+                    <mat-label> Alloted Room No </mat-label>
+                    <input matInput formControlName="AllotedRoomNo" />
+                  <mat-error
+                  *ngIf="participantForm.controls['AllotedRoomNo'].hasError('required') && (participantForm.controls['AllotedRoomNo'].touched || participantForm.controls['AllotedRoomNo'].dirty)">
+                  <span>Allowted room no.is required.</span>
+                 </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['AllotedRoomNo'].hasError('pattern')">
+                  <span>Please enter  valid allowted room no only.</span>
+                  </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['AllotedRoomNo'].hasError('maxlength')">
+                  <span>Length should not be greater than 15 characters.</span>
+                  </mat-error>
+                  <mat-error
+                    *ngIf="participantForm.controls['AllotedRoomNo'].hasError('minlength')">
+                    <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field >
+                    <mat-label> Occupancy Type </mat-label>
+                    <mat-select formControlName="OccupanyType" >
+                     <mat-option  *ngFor="let item of occupancyType" [value]="item?.value">{{item?.value}}</mat-option>
+                     </mat-select>
+                     <mat-error
+                     *ngIf="participantForm.controls['OccupanyType'].hasError('required') && (participantForm.controls['OccupanyType'].touched || participantForm.controls['OccupanyType'].dirty)">
+                     <span>Type is required.</span>
+                    </mat-error>
+
+                </mat-form-field>
+                </div>
+
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left" >
+                    <mat-label>LO First Name</mat-label>
+                    <input matInput formControlName="LOFirstName" />
+                  <mat-error
+                  *ngIf="participantForm.controls['LOFirstName'].hasError('required') && (participantForm.controls['LOFirstName'].touched || participantForm.controls['LOFirstName'].dirty)">
+                  <span> First name is required.</span>
+                 </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['LOFirstName'].hasError('pattern')">
+                  <span>Please enter valid  first name.</span>
+                  </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['LOFirstName'].hasError('maxlength')">
+                  <span>Length should not be greater than 15 characters.</span>
+                  </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['LOFirstName'].hasError('minlength')">
+                  <span>Length should not be less than 2 characters.</span>
+                  </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3 ">
+                  <mat-form-field class="text-left" >
+                    <mat-label>LO Middle Name</mat-label>
+                    <input matInput formControlName="LOMiddleName" />
+                  <mat-error
+                  *ngIf="participantForm.controls['LOMiddleName'].hasError('required') && (participantForm.controls['LOMiddleName'].touched || participantForm.controls['LOMiddleName'].dirty)">
+                  <span> Middle name is required.</span>
+                 </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['LOMiddleName'].hasError('pattern')">
+                  <span>Please enter valid  middle name.</span>
+                  </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['LOMiddleName'].hasError('maxlength')">
+                  <span>Length should not be greater than 15 characters.</span>
+                  </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['LOMiddleName'].hasError('minlength')">
+                  <span>Length should not be less than 2 characters.</span>
+                  </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left" >
+                    <mat-label>LO Last Name</mat-label>
+                    <input
+                      matInput
+                      formControlName="LOLastName"
+                      (keyup)="hasError(participantForm.controls['LOLastName'])"
+                    />
+                    <mat-error
+                    *ngIf="participantForm.controls['LOLastName'].hasError('required') && participantForm.controls['LOLastName'].touched">
+
+                    <span> Last name is required.</span>
+                  </mat-error>
+                    <mat-error
+                    *ngIf="participantForm.controls['LOLastName'].hasError('pattern')">
+                    <span>Please enter valid  last name.</span>
+                    </mat-error>
+                    <mat-error
+                    *ngIf="participantForm.controls['LOLastName'].hasError('maxlength')">
+                    <span>Length should not be greater than 15 characters.</span>
+                    </mat-error>
+                    <mat-error
+                    *ngIf="participantForm.controls['LOLastName'].hasError('minlength')">
+                    <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left" >
+                    <mat-label> Identity No. Of LO </mat-label>
+                    <input matInput formControlName="IdentityNoOfLO" />
+                  <mat-error
+                  *ngIf="participantForm.controls['IdentityNoOfLO'].hasError('required') && (participantForm.controls['IdentityNoOfLO'].touched || participantForm.controls['IdentityNoOfLO'].dirty)">
+                  <span>Identity no. is required.</span>
+                 </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['IdentityNoOfLO'].hasError('pattern')">
+                  <span>Please enter valid identity no. only.</span>
+                  </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['IdentityNoOfLO'].hasError('maxlength')">
+                  <span>Length should not be greater than 10 characters.</span>
+                  </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['IdentityNoOfLO'].hasError('minlength')">
+                  <span>Length should not be less than 2 characters.</span>
+                  </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left" >
+                    <mat-label> Contact No. Of LO </mat-label>
+                    <input matInput formControlName="ContactNoOfLO" />
+                  <mat-error
+                  *ngIf="participantForm.controls['ContactNoOfLO'].hasError('required') && (participantForm.controls['ContactNoOfLO'].touched || participantForm.controls['ContactNoOfLO'].dirty)">
+                  <span>Contact no. is required.</span>
+                 </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['ContactNoOfLO'].hasError('pattern')">
+                  <span>Please enter valid contact no. only.</span>
+                  </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['ContactNoOfLO'].hasError('maxlength')">
+                  <span>Length should not be greater than 10 characters.</span>
+                  </mat-error>
+                  </mat-form-field>
+                </div>
+
+
+
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left" >
+                    <mat-label> Alloted Vehicle No </mat-label>
+                    <input matInput formControlName="AllotedVehicle" />
+                  <mat-error
+                  *ngIf="participantForm.controls['AllotedVehicle'].hasError('required') && (participantForm.controls['AllotedVehicle'].touched || participantForm.controls['AllotedVehicle'].dirty)">
+                  <span>Alloted vehicle no. vehicle required.</span>
+                 </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['AllotedVehicle'].hasError('pattern')">
+                  <span>Please enter valid alloted vehicle no. only.</span>
+                  </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['AllotedVehicle'].hasError('maxlength')">
+                  <span>Length should not be greater than 30 characters.</span>
+                  </mat-error>
+                  <mat-error
+                  *ngIf="participantForm.controls['AllotedVehicle'].hasError('minlength')">
+                  <span>Length should not be less than 2 characters.</span>
+                  </mat-error>
+                  </mat-form-field>
+                </div>
+
+
+
+              </div>
+                  <div class="col-12 col-lg-12 col-sm-12 col-md-12 mt-3 text-end ">
+                    <button
+                      mat-flat-button
+                      color="primary"
+                      class="m-1"
+                      (click)="isUpdate ? updateParticipantData() : participantSubmit()"
+                      [disabled]="participantForm.invalid"
+                    >
+                      {{ isUpdate ? "Update" : "Submit" }}
+                    </button>
+                    <button
+                      mat-flat-button
+                      color="warn"
+                      #closeModal
+                      type="button"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                      (click)="close()" >
+                      Cancel
+                    </button>
+                    </div>
+            </form>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+</div>
+

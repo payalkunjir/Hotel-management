@@ -1,0 +1,267 @@
+<div class="container">
+  <div class="sticky">
+      <div class="row" style="margin-top: 40px">
+        <div class="col-12 text-center fieldeName">Driver</div>
+      </div>
+      <div class="col-12">
+        <div class="row mt-3 mx-5">
+          <div class="col-md-2 col-sm-3 col-3 ">
+            <button
+              mat-flat-button
+              class="AddText text-white mt-5"
+              data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop"
+              matTooltip="Add Driver" style="padding:20px"
+              (click)="add()"
+            >
+              Add Driver
+            </button>
+          </div>
+          <div class="col-md-7 d-none d-md-block"></div>
+          <div class="col-md-3 col-sm-9 col-9 text-end mt-4" >
+            <mat-form-field class="w-75">
+              <mat-label> Search</mat-label>
+                <input matInput (keyup)="Filterchange($event)">
+            </mat-form-field>
+        </div>
+        </div>
+      </div>
+    </div>
+      <div class="overflow-auto mx-5">
+      <div class="table-wrapper col-12 mt-2" style="overflow-x: auto;">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" class="mat-table" matSort>
+          <!-- sr no Column -->
+          <ng-container matColumnDef="DriverId">
+            <th
+            mat-sort-header
+              class="mat-header-cell"
+              *matHeaderCellDef
+              matTooltip="Sr no"
+            >
+              Sr.no
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              style="width: 7%"
+              class="indexCell mat-cell"
+            >
+              {{ Driver.indexOf(element) + 1 }}
+            </td>
+          </ng-container>
+
+          <!-- Driver name Column -->
+          <ng-container matColumnDef="DriverName">
+            <th  class="mat-header-cell" *matHeaderCellDef mat-sort-header  matTooltip="Driver Name" >
+              Driver Name
+            </th>
+            <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.DriverName }}</td>
+          </ng-container>
+
+          <!-- Driver code Column -->
+          <ng-container matColumnDef="DriverCode">
+            <th  class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Driver Code">
+              Driver Code
+            </th>
+            <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.DriverCode }} </td>
+          </ng-container>
+
+          <!--driver number-->
+          <ng-container matColumnDef="DriverNumber">
+            <th   class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Driver Number">
+              Driver Number
+            </th>
+            <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.DriverNumber }} </td>
+          </ng-container>
+          <!-- action buttons -->
+          <ng-container matColumnDef="action">
+            <th   class="mat-header-cell text-center" *matHeaderCellDef colspan="12">
+              Action
+            </th>
+            <td mat-cell *matCellDef="let element" style="width: 15%" class="mat-cell actionBtn text-center">
+              <button mat-button
+                *ngIf="element?.IsDeleted == 0"
+                color="primary"
+                data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop"
+                matTooltip="Edit"
+                (click)="updateDriver(element)" >
+                <i class="fa-regular fa-pen-to-square"></i>
+              </button>
+              <span *ngIf="element?.IsDeleted == 0; else restore">
+                <button
+                  mat-button
+                  color="warn"
+                  matTooltip="Delete"
+                  (click)="deleteDriver(element, '0', 'delete')">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </span>
+              <ng-template #restore>
+                <button
+                  mat-button
+                  color="warn"
+                  matTooltip="Restore"
+                  (click)="deleteDriver(element, '1', 'restore')" >
+                  <i class="fa-solid fa-arrow-rotate-left"></i>
+                </button>
+              </ng-template>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky:true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+        <!-- for pagination. -->
+        <mat-paginator
+          class="mat-paginator"
+          #paginator
+          [length]="Driver.length"
+          [pageSize]="10"
+          showFirstLastButtons
+          [pageSizeOptions]="[5, 10, 20, 100, 1000]"
+          aria-label="Select page">
+        </mat-paginator>
+
+      </div>
+</div>
+  <!-- modal form -->
+  <div
+    class="modal fade"
+    id="staticBackdrop"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-md modal-dialog-scrollable m-auto">
+      <div class="modal-content rounded-0 p-0 w-100 mt-5" style="margin: 90px">
+        <div class="modal-body">
+          <div class="text-end">
+            <button
+              #closeModal
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              (click)="close()"
+            ></button>
+          </div>
+          <fieldset class="border p-2">
+            <legend class="float-none w-auto p-2" style="color:rgb(154, 30, 30);font-family: Poppins, sans-serif;">
+              {{ isUpdate ? "Update Driver" : "Add Driver" }}
+            </legend>
+            <div class="container-fluid p-4 pt-2 ps-2 pe-2">
+              <form action="" [formGroup]="DriverForm">
+                <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-12 text-center">
+                    <mat-form-field class="w-75">
+                      <mat-label>Driver Name</mat-label>
+                      <input matInput formControlName="DriverName" />
+                    <mat-error
+                    *ngIf="DriverForm.controls['DriverName'].hasError('required') && (DriverForm.controls['DriverName'].touched || DriverForm.controls['DriverName'].dirty)">
+
+                    <span>Driver name is required.</span>
+                  </mat-error>
+                    <mat-error
+                    *ngIf="DriverForm.controls['DriverName'].hasError('pattern')">
+                    <span>Please enter valid Driver name.</span>
+                    </mat-error>
+                    <mat-error
+                    *ngIf="DriverForm.controls['DriverName'].hasError('maxlength')">
+                    <span>Length should not be greater than 30 characters.</span>
+                    </mat-error>
+                    <mat-error
+                    *ngIf="DriverForm.controls['DriverName'].hasError('minlength')">
+                    <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                    </mat-form-field>
+                    </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-12 text-center">
+                    <mat-form-field class="w-75">
+                      <mat-label>Driver Code</mat-label>
+                      <input
+                        matInput
+                        formControlName="DriverCode"
+                        (keyup)="hasError(DriverForm.controls['DriverCode'])"
+                      />
+                      <mat-error
+                      *ngIf="DriverForm.controls['DriverCode'].hasError('required') && DriverForm.controls['DriverCode'].touched">
+
+                      <span>Driver code is required.</span>
+                    </mat-error>
+                      <mat-error
+                      *ngIf="DriverForm.controls['DriverCode'].hasError('pattern')">
+                      <span>Please enter valid Driver code.</span>
+                      </mat-error>
+                      <mat-error
+                      *ngIf="DriverForm.controls['DriverCode'].hasError('maxlength')">
+                      <span>Length should not be greater than 10 characters.</span>
+                      </mat-error>
+                      <mat-error
+                      *ngIf="DriverForm.controls['DriverCode'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-12 text-center mt-3">
+                    <mat-form-field class="w-75">
+                      <mat-label>Driver Liscence Number</mat-label>
+                      <input
+                        matInput
+                        formControlName="DriverNumber"
+                        (keyup)="hasError(DriverForm.controls['DriverNumber'])"
+                      />
+                      <mat-error
+                      *ngIf="DriverForm.controls['DriverNumber'].hasError('required') && DriverForm.controls['DriverNumber'].touched">
+
+                      <span> Liscence no is required.</span>
+                    </mat-error>
+                      <mat-error
+                      *ngIf="DriverForm.controls['DriverNumber'].hasError('pattern')">
+                      <span>Please enter valid liscence no .</span>
+                      </mat-error>
+                      <mat-error
+                      *ngIf="DriverForm.controls['DriverNumber'].hasError('maxlength')">
+                      <span>Length should not be greater than 10 characters.</span>
+                      </mat-error>
+                      <mat-error
+                      *ngIf="DriverForm.controls['DriverNumber'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                      </mat-error>
+                    </mat-form-field>
+
+                </div>
+                    <div class="col-lg-12 col-md-12 col-sm-6 col-12 mt-4 text-end">
+                      <button
+                        mat-flat-button
+                        color="primary"
+                        class="m-1"
+                        (click)="isUpdate ? updateDriverData() : DriverSumbit()"
+                        [disabled]="DriverForm.invalid"
+                      >
+                        {{ isUpdate ? "Update" : "Submit" }}
+                      </button>
+                      <button
+                        mat-flat-button
+                        color="warn"
+                        #closeModal
+                        type="button"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                        (click)="close()"
+                      >
+                        Cancel
+                      </button>
+
+                </div>
+              </form>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  </div>

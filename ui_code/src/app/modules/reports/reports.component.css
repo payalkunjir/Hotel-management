@@ -1,0 +1,51 @@
+
+
+.card-1{
+font-family:ui-rounded;
+ /* height: 80px; */
+ line-height: 1.0;
+font-size: 30px;
+/* padding: 80px; */
+/* text-align: center; */
+  background-image: linear-gradient(90deg,#02105ecc, rgba(19, 106, 192, 0.849));
+
+}
+
+.card-1:hover{
+
+  background :linear-gradient(45deg, rgb(5, 118, 170) 0%, rgb(66, 94, 231) 3%, rgba(152,68,183,1) 51%, rgb(226, 18, 233) 100%) ;
+  box-shadow: rgba(85, 85, 85, 0.52) 8px 8px 5px;
+
+}
+/* .card-6{
+  background-image: linear-gradient(90deg,rgb(3, 93, 67),rgb(3, 134, 101));
+} */
+/* .card-6:hover{
+  box-shadow: rgba(85, 85, 85, 0.52) 8px 8px 3px;
+} */
+
+*{
+  margin: 0;}
+@media (min-width:290px) and (max-width: 960px)
+{
+  .card-1{
+    line-height: 1.5;
+    /* height: 40px; */
+    font-size: 16px;
+    text-align: center;
+     /* width: 120px; */
+    }
+  }
+
+.card-body {
+  flex: 1 1 auto;
+  padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
+  color: var(--bs-card-color);
+}
+/* .card-body{
+  flex: 1 1 auto;
+} */
+/* .col-12 {
+  flex: 0 0 auto;
+  width: 100%;
+} */

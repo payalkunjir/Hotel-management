@@ -1,0 +1,8 @@
+
+.mat-header-cell:hover{
+  background :linear-gradient(45deg, rgb(5, 118, 170) 0%, rgb(66, 94, 231) 3%, rgba(152,68,183,1) 51%, rgb(226, 18, 233) 100%) ;
+
+}
+*{
+  margin: 0;
+}

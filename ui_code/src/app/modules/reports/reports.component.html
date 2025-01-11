@@ -1,0 +1,39 @@
+
+
+
+<div class="container mt-5" >
+  <div class="row" style="margin-top: 10px">
+    <div class="col-12 text-center fieldeName"> Reports</div>
+  </div>
+  <div class="row mx-5" style="padding-top: 10px; " >
+    <div class="row ">
+      <div class="col-md-9 col-3 col-sm-3 mb-3  text-end">
+      </div>
+      <div class="col-md-3 col-sm-9 col-9 col-sm-9 col-xs-12 text-end" style="margin-top: 26px;">
+        <mat-form-field class="w-75">
+          <mat-label> Search</mat-label>
+            <input matInput (keyup)="Filterchange($event)">
+        </mat-form-field>
+    </div>
+</div>
+<!-- col-lg-4 col-md-12 col-sm-12 col-12 -->
+<div class="row">
+      <div class="col-12 bg-white p-4 shadow">
+          <div class="row p-3 m-1">
+
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mt-3" *ngFor="let item of reportsData">
+              <a  class="text-decoration-none" (click)="navigate(item?.route)">
+                  <div class="card">
+                      <div class="card-body card-1 text-white fw-bold text-center">
+                          <span class="pt-5 pb-5">
+                           {{item?.name}}
+                          </span>
+                      </div>
+                  </div>
+              </a>
+          </div>
+          </div>
+          </div>
+        </div>
+      </div>
+  </div>

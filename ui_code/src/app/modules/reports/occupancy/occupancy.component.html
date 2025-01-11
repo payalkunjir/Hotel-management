@@ -1,0 +1,147 @@
+<div class="container">
+  <div class="sticky">
+  <div class="row mt-5 text-center">
+  <div class="fieldeName col-12">
+    Detailed Occupancy Report
+  </div>
+  </div>
+  <form action="" [formGroup]="OccupancyForm">
+ <div class="row mt-5 ">
+ <div class="col-lg-1 col-md-6 col-sm-6 col-12" ><span class="material-symbols-rounded ms-5" (click)="back()">
+ keyboard_backspace
+ </span></div>
+   <!-- occupancy-->
+    <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center">
+      <mat-form-field class="w-75">
+        <mat-label> Occupancy Type </mat-label>
+        <mat-select formControlName="OccupanyType" multiple="">
+         <mat-option  *ngFor="let item of occupancyType" [value]="item?.value">{{item?.value}}</mat-option>
+         </mat-select>
+         <mat-error
+         *ngIf="OccupancyForm.controls['OccupanyType'].hasError('required') && (OccupancyForm.controls['OccupanyType'].touched || OccupancyForm.controls['OccupanyType'].dirty)">
+         <span>Occupancy type is required.</span>
+        </mat-error>
+    </mat-form-field>
+ </div>
+ <!-- check in date input-->
+ <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center">
+   <mat-form-field class="w-75">
+     <mat-label>Check In Date</mat-label>
+     <input matInput formControlName="CheckinDate" [matDatepicker]="picker4" >
+     <mat-datepicker-toggle matIconSuffix [for]="picker4"></mat-datepicker-toggle>
+     <mat-datepicker #picker4></mat-datepicker>
+     <mat-error
+     *ngIf="OccupancyForm.controls['CheckinDate'].hasError('required') && (OccupancyForm.controls['CheckinDate'].touched || OccupancyForm.controls['CheckinDate'].dirty)">
+     <span>Check in date is required.</span>
+    </mat-error>
+   </mat-form-field>
+ </div>
+  <!-- check out date input-->
+ <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center">
+   <mat-form-field class="w-75" >
+     <mat-label>Check Out Date</mat-label>
+     <input matInput formControlName="CheckoutDate" [min]="OccupancyForm.controls.CheckinDate.value" [matDatepicker]="picker5">
+     <mat-datepicker-toggle   matIconSuffix [for]="picker5" ></mat-datepicker-toggle>
+     <mat-datepicker  #picker5></mat-datepicker>
+     <mat-error
+     *ngIf="OccupancyForm.controls['CheckoutDate'].hasError('required') && (OccupancyForm.controls['CheckoutDate'].touched || OccupancyForm.controls['CheckoutDate'].dirty)">
+     <span>Check out date is required.</span>
+    </mat-error>
+   </mat-form-field>
+ </div>
+
+ <div class="col-lg-2 col-md-6 col-sm-6 col-12 mt-3 ">
+   <button mat-raised-button class="AddText text-white" [disabled]="OccupancyForm.invalid" (click)="occupancyReport()" >Submit</button>
+ </div>
+
+</div>
+</form>
+</div>
+
+
+
+<!-- //table -->
+
+   <div class="col-12 mt-3">
+     <div class="row mx-5">
+       <div class="col-md-9 col-3 col-sm-3 mb-3  text-end">
+       </div>
+       <div class="col-md-3 col-sm-9 col-9 col-sm-9 col-xs-12 text-end" style="margin-top: 26px;">
+        <mat-form-field class="w-75">
+          <mat-label> Search</mat-label>
+            <input matInput (keyup)="Filterchange($event)">
+        </mat-form-field>
+    </div>
+     </div>
+   </div>
+
+   <div class="overflow-auto mx-5 ">
+   <div class="table-wrapper col-12 mt-2" style="overflow-x: auto;;">
+     <table mat-table [dataSource]="dataSource" class="mat-table" matSort>
+       <!-- Sr no Column -->
+       <ng-container matColumnDef="HotelId">
+         <th
+           mat-sort-header
+           class="mat-header-cell"
+           *matHeaderCellDef
+           matTooltip="Sr no">
+           Sr.no
+         </th>
+         <td
+           mat-cell
+           *matCellDef="let element"
+
+           class="indexCell mat-cell">
+           {{ occupancy.indexOf(element) + 1 }}
+         </td>
+         <!-- Participant name column -->
+       </ng-container>
+
+         <ng-container matColumnDef="ParticipantName">
+           <th  class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Participant Name">
+            Participant Name
+           </th>
+           <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.ParticipantFirstName }} {{ element?.ParticipantMiddleName }} {{ element?.ParticipantLastName}} </td>
+         </ng-container>
+
+         <!-- Venue name column-->
+       <ng-container matColumnDef="VenueName">
+         <th  class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Venue Name">
+         Venue Name
+         </th>
+         <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.VenueName }} </td>
+       </ng-container>
+
+       <!-- Area name column -->
+       <ng-container matColumnDef="AreaName">
+         <th  class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip=" Area Name">
+          Area Name
+         </th>
+         <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.AreaName }} </td>
+       </ng-container>
+
+       <!-- hotel name column -->
+       <ng-container matColumnDef="HotelName">
+         <th  class="mat-header-cell" *matHeaderCellDef mat-sort-header  matTooltip="Hotel Name" >
+          Hotel Name
+         </th>
+         <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.HotelName }}</td>
+       </ng-container>
+
+
+       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></tr>
+       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+     </table>
+   </div>
+     <mat-paginator
+       class="mat-paginator"
+       #paginator
+       [length]="occupancy.length"
+       [pageSize]="10"
+       [pageSizeOptions]="[5, 10, 20, 100, 1000]"
+       aria-label="Select page">
+     </mat-paginator>
+
+   </div>
+
+</div>

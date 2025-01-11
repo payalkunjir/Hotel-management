@@ -1,0 +1,240 @@
+<div class="container">
+  <div class="sticky">
+      <div class="row" style="margin-top: 40px">
+        <div class="col-12 text-center fieldeName">Guest Category</div>
+      </div>
+      <div class="col-12">
+        <div class="row mt-3 mx-5">
+          <div class="col-md-2 col-sm-3 col-3">
+            <button
+              mat-flat-button
+              class="AddText text-white mt-5"
+              data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop"
+              matTooltip="Add Guest Category" style="padding:20px"
+              (click)="add()"
+            >
+              Add Guest Category
+            </button>
+          </div>
+          <div class="col-md-7 d-none d-md-block"></div>
+          <div class="col-md-3 col-sm-9 col-9 text-end mt-4">
+            <mat-form-field class="w-75">
+              <mat-label> Search</mat-label>
+                <input matInput (keyup)="Filterchange($event)">
+            </mat-form-field>
+        </div>
+        </div>
+      </div>
+    </div>
+      <div class="overflow-auto  mx-5">
+      <div class="table-wrapper col-12 mt-2"style="overflow-x: auto;">
+        <table mat-table [dataSource]="dataSource" class="mat-table" matSort>
+          <!-- sr no Column -->
+
+            <ng-container matColumnDef="GuestCategoryId">
+            <th
+            mat-sort-header
+              class="mat-header-cell"
+              *matHeaderCellDef
+              matTooltip="Sr no"
+            >
+              Sr.no
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              style="width: 7%"
+              class="indexCell mat-cell"
+            >
+              {{ GuestCategory.indexOf(element) + 1 }}
+            </td>
+          </ng-container>
+
+          <!-- GuestCategory name Column -->
+          <ng-container matColumnDef="GuestCategoryName">
+            <th class="mat-header-cell" *matHeaderCellDef mat-sort-header  matTooltip="Guest Category Name" >
+              Guest Category Name
+            </th>
+            <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.GuestCategoryName }}</td>
+          </ng-container>
+
+          <!-- GuestCategory code Column -->
+          <ng-container matColumnDef="GuestCategoryCode">
+            <th  class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="GuestCategory Code">
+              Guest Category Code
+            </th>
+            <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.GuestCategoryCode }} </td>
+          </ng-container>
+
+          <!--GuestCategory number-->
+          <ng-container matColumnDef="GuestCategoryNumber">
+            <th  class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Guest Category Number">
+              GuestCategory Number
+            </th>
+            <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.GuestCategoryNumber }} </td>
+          </ng-container>
+          <!-- action buttons -->
+          <ng-container matColumnDef="action">
+            <th   class="mat-header-cell text-center" *matHeaderCellDef colspan="12">
+              Action
+            </th>
+            <td mat-cell *matCellDef="let element" style="width: 15%" class="mat-cell actionBtn text-center">
+              <button mat-button
+                *ngIf="element?.IsDeleted == 0"
+                color="primary"
+                data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop"
+                matTooltip="Edit"
+                (click)="updateGuestCategory(element)" >
+                <i class="fa-regular fa-pen-to-square"></i>
+              </button>
+              <span *ngIf="element?.IsDeleted == 0; else restore">
+                <button
+                  mat-button
+                  color="warn"
+                  matTooltip="Delete"
+                  (click)="deleteGuestCategory(element, '0', 'delete')">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </span>
+              <ng-template #restore>
+                <button
+                  mat-button
+                  color="warn"
+                  matTooltip="Restore"
+                  (click)="deleteGuestCategory(element, '1', 'restore')" >
+                  <i class="fa-solid fa-arrow-rotate-left"></i>
+                </button>
+              </ng-template>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky:true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+        <!-- for pagination. -->
+        <mat-paginator
+        class="mat-paginator"
+        #paginator
+        [length]="GuestCategory.length"
+        [pageSize]="10"
+        [pageSizeOptions]="[5, 10, 20, 100, 1000]"
+        aria-label="Select page">
+      </mat-paginator>
+
+      </div>
+</div>
+  <!-- modal form -->
+  <div
+    class="modal fade"
+    id="staticBackdrop"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-md modal-dialog-scrollable m-auto">
+      <div class="modal-content rounded-0 p-0 w-100 mt-5" style="margin: 90px">
+        <div class="modal-body">
+          <div class="text-end">
+            <button
+              #closeModal
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              (click)="close()"
+            ></button>
+          </div>
+          <fieldset class="border p-2">
+            <legend class="float-none w-auto p-2" style="color:rgb(154, 30, 30)">
+              {{ isUpdate ? "Update Guest Category" : "Add Guest Category" }}
+            </legend>
+            <div class="container-fluid p-4 pt-2 ps-2 pe-2">
+              <form action="" [formGroup]="GuestCategoryForm">
+                <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-12 text-center">
+                    <mat-form-field class="w-75">
+                      <mat-label>Guest Category Name</mat-label>
+                      <input matInput formControlName="GuestCategoryName" />
+                    <mat-error
+                    *ngIf="GuestCategoryForm.controls['GuestCategoryName'].hasError('required') && (GuestCategoryForm.controls['GuestCategoryName'].touched || GuestCategoryForm.controls['GuestCategoryName'].dirty)">
+
+                    <span>Guest category name is required.</span>
+                  </mat-error>
+                    <mat-error
+                    *ngIf="GuestCategoryForm.controls['GuestCategoryName'].hasError('pattern')">
+                    <span>Please enter valid guest category name.</span>
+                    </mat-error>
+                    <mat-error
+                    *ngIf="GuestCategoryForm.controls['GuestCategoryName'].hasError('maxlength')">
+                    <span>Length should not be greater than 30 characters.</span>
+                    </mat-error>
+                    <mat-error
+                      *ngIf="GuestCategoryForm.controls['GuestCategoryName'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                      </mat-error>
+                    </mat-form-field>
+                    </div>
+
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-12 text-center">
+                    <mat-form-field class="w-75">
+                      <mat-label>Guest Category Code</mat-label>
+                      <input
+                        matInput
+                        formControlName="GuestCategoryCode"
+                        (keyup)="hasError(GuestCategoryForm.controls['GuestCategoryCode'])"
+                      />
+                      <mat-error
+                      *ngIf="GuestCategoryForm.controls['GuestCategoryCode'].hasError('required') && GuestCategoryForm.controls['GuestCategoryCode'].touched">
+
+                      <span>Guest category code is required.</span>
+                    </mat-error>
+                      <mat-error
+                      *ngIf="GuestCategoryForm.controls['GuestCategoryCode'].hasError('pattern')">
+                      <span>Please enter valid guest category code.</span>
+                      </mat-error>
+                      <mat-error
+                      *ngIf="GuestCategoryForm.controls['GuestCategoryCode'].hasError('maxlength')">
+                      <span>Length should not be greater than 10 characters.</span>
+                      </mat-error>
+                      <mat-error
+                      *ngIf="GuestCategoryForm.controls['GuestCategoryCode'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                      </mat-error>
+                    </mat-form-field>
+
+                  </div>
+                </div>
+                    <div class="col-12 col-lg-12 col-sm-12 col-md-12 text-end mt-4">
+                      <button
+                        mat-flat-button
+                        color="primary"
+                        class="m-1"
+                        (click)="isUpdate ? updateGuestCategoryData() : GuestCategorySumbit()"
+                        [disabled]="GuestCategoryForm.invalid"
+                      >
+                        {{ isUpdate ? "Update" : "Submit" }}
+                      </button>
+                      <button
+                        mat-flat-button
+                        color="warn"
+                        #closeModal
+                        type="button"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                        (click)="close()"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+              </form>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  </div>

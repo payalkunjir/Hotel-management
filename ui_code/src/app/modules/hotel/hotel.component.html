@@ -1,0 +1,340 @@
+<div class="container">
+  <div class="sticky">
+    <div class="row" style="margin-top: 40px">
+      <div class="col-12 text-center fieldeName"> Hotel</div>
+    </div>
+    <div class="col-12">
+      <div class="row mt-3 mx-5">
+        <div class="col-md-2 col-sm-3 col-3">
+          <button
+            mat-flat-button
+            class="AddText text-white mt-5 "
+            data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop"
+            matTooltip="Add Hotel" style="padding:20px"
+            (click)="add()">
+            Add Hotel
+          </button>
+        </div>
+        <div class="col-md-7 d-none d-md-block"></div>
+        <div class="col-md-3 col-sm-9 col-9 text-end mt-4" >
+          <mat-form-field class="w-75">
+            <mat-label> Search</mat-label>
+            <input matInput (keyup)="Filterchange($event)">
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="overflow-auto  mx-5">
+    <div class="table-wrapper col-12 mt-2" style="overflow-x: auto;">
+      <table mat-table [dataSource]="dataSource" class="mat-table" matSort>
+        <ng-container matColumnDef="HotelId">
+          <th mat-sort-header class="mat-header-cell" *matHeaderCellDef matTooltip="Sr no">
+            Sr.no
+          </th>
+          <td mat-cell *matCellDef="let element" class="indexCell mat-cell ">
+            {{ hotel.indexOf(element) + 1 }}
+          </td>
+        </ng-container>
+
+        <!--Hotel name Column -->
+        <ng-container matColumnDef="HotelName">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Hotel Name">
+            Hotel Name
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.HotelName }}</td>
+        </ng-container>
+
+
+        <!--Hotel category Column -->
+        <ng-container matColumnDef="HotelCategory">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Hotel Category">
+            Hotel Category
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.HotelCategory }} </td>
+        </ng-container>
+
+        <!--Hotel address Column -->
+        <ng-container matColumnDef="HotelAddress">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Hotel Address">
+            Address
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.HotelAddress }} </td>
+        </ng-container>
+
+        <!--AreaId Column -->
+        <ng-container matColumnDef="AreaName">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Hotel contact">
+            Area Name
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.AreaName }} </td>
+        </ng-container>
+
+        <!--Hotel code Column -->
+        <ng-container matColumnDef="RoomCategory">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Room Category">
+            Room Category
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.RoomCategory }} </td>
+        </ng-container>
+
+
+        <!--Hotel total room Column -->
+        <ng-container matColumnDef="TotalRoom">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Total Room">
+            Hotel Total Room
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.TotalRoom }} </td>
+        </ng-container>
+
+        <!--Hotel distance from venue Column -->
+        <ng-container matColumnDef="HotelDistanceFromVenue">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Hotel distance from venue">
+            Hotel Distance From Venue
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.HotelDistanceFromVenue }} </td>
+        </ng-container>
+
+        <!--Hotel contact Column -->
+        <ng-container matColumnDef="HotelContactNo">
+          <th class="mat-header-cell" *matHeaderCellDef mat-sort-header matTooltip="Hotel contact">
+            Hotel Contact
+          </th>
+          <td mat-cell class="mat-cell" *matCellDef="let element"> {{ element?.HotelContactNo }} </td>
+        </ng-container>
+
+        <!-- action buttons -->
+        <ng-container matColumnDef="action">
+          <th class="mat-header-cell text-center" *matHeaderCellDef colspan="12">
+            Action
+          </th>
+          <td mat-cell *matCellDef="let element" class="mat-cell actionBtn text-center">
+            <button mat-button *ngIf="element?.IsDeleted == 0" color="primary" data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop" matTooltip="Edit" (click)="updateHotel(element)">
+              <i class="fa-regular fa-pen-to-square"></i>
+            </button>
+            <span *ngIf="element?.IsDeleted == 0; else restore">
+              <button mat-button color="warn" matTooltip="Delete" (click)="deleteHotel(element, '0', 'delete')">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </span>
+            <ng-template #restore>
+              <button mat-button color="warn" matTooltip="Restore" (click)="deleteHotel(element, '1', 'restore')">
+                <i class="fa-solid fa-arrow-rotate-left"></i>
+              </button>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky:true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+      <!-- for pagination. -->
+      <mat-paginator
+        class="mat-paginator"
+        #paginator
+        [length]="hotel.length"
+        [pageSize]="10"
+        [pageSizeOptions]="[5, 10, 20, 100, 1000]"
+        aria-label="Select page">
+      </mat-paginator>
+
+  </div>
+</div>
+
+<!-- modal form -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+  <div class="modal-dialog modal-md modal-dialog-scrollable m-auto">
+    <div class="modal-content rounded-0 p-0 " style="margin: 90px; ">
+      <div class="modal-body">
+        <div class="text-end">
+          <button #closeModal type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="close()"></button>
+        </div>
+        <fieldset class="border p-2">
+          <legend class="float-none w-auto p-2" style="color:rgb(154, 30, 30);font-family: Poppins, sans-serif;">
+            {{ isUpdate ? "Update Hotel" : "Add Hotel" }}
+          </legend>
+          <div class="container-fluid p-5 pt-2 ps-2 pe-2">
+            <form action="" [formGroup]="hotelForm">
+              <div class="row">
+                <div class="col-lg-4 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label>Hotel Name</mat-label>
+                    <input matInput formControlName="HotelName" />
+                    <mat-error
+                      *ngIf="hotelForm.controls['HotelName'].hasError('required') && (hotelForm.controls['HotelName'].touched || hotelForm.controls['HotelName'].dirty)">
+                      <span>Hotel name is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="hotelForm.controls['HotelName'].hasError('pattern')">
+                      <span>Please enter valid hotel name.</span>
+                    </mat-error>
+                    <mat-error *ngIf="hotelForm.controls['HotelName'].hasError('maxlength')">
+                      <span>Length should not be greater than 30 characters.</span>
+                    </mat-error>
+                    <mat-error *ngIf="hotelForm.controls['HotelName'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-6 col-12 text-center mt-3 ">
+                  <mat-form-field class="text-left">
+                    <mat-label>Hotel Category</mat-label>
+                    <input matInput formControlName="HotelCategory" />
+                    <mat-error
+                      *ngIf="hotelForm.controls['HotelCategory'].hasError('required') && (hotelForm.controls['HotelCategory'].touched || hotelForm.controls['HotelCategory'].dirty)">
+                      <span>Hotel category is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="hotelForm.controls['HotelCategory'].hasError('pattern')">
+                      <span>Please enter valid hotel category.</span>
+                    </mat-error>
+                    <mat-error *ngIf="hotelForm.controls['HotelCategory'].hasError('maxlength')">
+                      <span>Length should not be greater than 30 characters.</span>
+                    </mat-error>
+                    <mat-error *ngIf="hotelForm.controls['HotelCategory'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label>Hotel Address</mat-label>
+                    <input matInput formControlName="HotelAddress"
+                      (keyup)="hasError(hotelForm.controls['HotelAddress'])" />
+                    <mat-error
+                      *ngIf="hotelForm.controls['HotelAddress'].hasError('required') && hotelForm.controls['HotelAddress'].touched">
+
+                      <span>Hotel address is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="hotelForm.controls['HotelAddress'].hasError('pattern')">
+                      <span>Please enter valid hotel address.</span>
+                    </mat-error>
+                    <mat-error *ngIf="hotelForm.controls['HotelAddress'].hasError('maxlength')">
+                      <span>Length should not be greater than 10 characters.</span>
+                    </mat-error>
+                    <mat-error *ngIf="hotelForm.controls['HotelAddress'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+
+                <div class="col-lg-4 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label>Room Category</mat-label>
+                    <input matInput formControlName="RoomCategory"
+                      (keyup)="hasError(hotelForm.controls['RoomCategory'])" />
+                    <mat-error
+                      *ngIf="hotelForm.controls['RoomCategory'].hasError('required') && hotelForm.controls['RoomCategory'].touched">
+                      <span>Room category is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="hotelForm.controls['RoomCategory'].hasError('pattern')">
+                      <span>Please enter valid room category.</span>
+                    </mat-error>
+                    <mat-error *ngIf="hotelForm.controls['RoomCategory'].hasError('maxlength')">
+                      <span>Length should not be greater than 10 characters.</span>
+                    </mat-error>
+                    <mat-error *ngIf="hotelForm.controls['RoomCategory'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label>Total Room</mat-label>
+                    <input matInput formControlName="TotalRoom" />
+                    <mat-error
+                      *ngIf="hotelForm.controls['TotalRoom'].hasError('required') && (hotelForm.controls['TotalRoom'].touched || hotelForm.controls['TotalRoom'].dirty)">
+                      <span>Total room is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="hotelForm.controls['TotalRoom'].hasError('pattern')">
+                      <span>Please enter total rooms only.</span>
+                    </mat-error>
+                    <mat-error *ngIf="hotelForm.controls['TotalRoom'].hasError('maxlength')">
+                      <span>Total rooms are not be greater than 10 numbers</span>
+                    </mat-error>
+
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label> Contact No </mat-label>
+                    <input matInput formControlName="HotelContactNo" />
+                    <mat-error
+                      *ngIf="hotelForm.controls['HotelContactNo'].hasError('required') && (hotelForm.controls['HotelContactNo'].touched || hotelForm.controls['HotelContactNo'].dirty)">
+                      <span>Total room is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="hotelForm.controls['HotelContactNo'].hasError('pattern')">
+                      <span>Please enter valid contact no. only.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+
+                <div class="col-lg-4 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label>Hotel Distance From Venue</mat-label>
+                    <input matInput formControlName="HotelDistanceFromVenue"
+                      (keyup)="hasError(hotelForm.controls['HotelDistanceFromVenue'])" />
+                    <mat-error
+                      *ngIf="hotelForm.controls['HotelDistanceFromVenue'].hasError('required') && hotelForm.controls['HotelDistanceFromVenue'].touched">
+                      <span>Hotel distance from venue is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="hotelForm.controls['HotelDistanceFromVenue'].hasError('pattern')">
+                      <span>Please enter valid hotel distance From venue.</span>
+                    </mat-error>
+                    <mat-error *ngIf="hotelForm.controls['HotelDistanceFromVenue'].hasError('maxlength')">
+                      <span>Length should not be greater than 10 characters.</span>
+                    </mat-error>
+                    <mat-error *ngIf="hotelForm.controls['HotelDistanceFromVenue'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field>
+                    <mat-label> Area </mat-label>
+                    <mat-select formControlName="AreaId" >
+                     <mat-option  *ngFor="let item of getAreas" [value]="item?.AreaId">{{item?.AreaName}}</mat-option>
+                     </mat-select>
+                     <mat-error
+                     *ngIf="hotelForm.controls['AreaId'].hasError('required') && (hotelForm.controls['AreaId'].touched || hotelForm.controls['AreaId'].dirty)">
+                     <span>Area is required.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-6 col-12 text-center mt-4">
+                  <div [ngStyle]="imageColor" class="chooseFile">
+                  <input id="hotelImage" #hotelImage type="file"
+                    (change)="onFileChange($event)">
+                </div>
+                <div class="uploadLabel"><label id="fileLabel" class="fileLabel" *ngIf="!selectedFile"></label></div>
+                </div>
+              </div>
+              <div class="col-12 col-lg-12 col-sm-12 col-md-12 mt-3 text-end">
+                <button mat-flat-button color="primary" class="m-1"
+                  (click)="submitData()" >
+                  {{ isUpdate ? "Update" : "Submit" }}
+                </button>
+                <button mat-flat-button color="warn" #closeModal type="button" data-bs-dismiss="modal"
+                  aria-label="Close" (click)="close()">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,306 @@
+<div class="container">
+  <div class="stickyposition">
+    <div class="row" style="margin-top: 40px">
+      <div class="col-12 text-center fieldeName">Area</div>
+    </div>
+    <div class="col-12">
+      <div class="row mt-3 mx-5">
+        <div class="col-md-2 col-sm-3 col-3">
+          <button
+            mat-flat-button
+            class="AddText text-white mt-5"
+            data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop"
+            matTooltip="Add Area"
+            style="padding: 20px"
+            (click)="add()"
+          >
+            Add Area
+          </button>
+        </div>
+        <div class="col-md-7 d-none d-md-block"></div>
+        <div class="col-md-3 col-sm-9 col-9 text-end mt-4">
+          <mat-form-field class="w-75">
+            <mat-label> Search</mat-label>
+            <input matInput (keyup)="Filterchange($event)" />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- table -->
+  <div class="overflow-auto mx-5">
+    <div class="table-wrapper col-12 mt-2" style="overflow-x: auto;">
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        class="mat-elevation-z8 area-table"
+        matSort
+      >
+        <!-- sr no Column -->
+        <ng-container matColumnDef="AreaId">
+          <th
+            mat-sort-header
+            class="mat-header-cell"
+            *matHeaderCellDef
+            matTooltip="Sr no"
+          >
+            Sr.no
+          </th>
+          <td
+            *matCellDef="let element"
+            style="width: 7%"
+            class="indexCell mat-cell"
+          >
+            {{ area.indexOf(element) + 1 }}
+          </td>
+        </ng-container>
+
+        <!-- Area name Column -->
+        <ng-container matColumnDef="AreaName">
+          <th
+            class="mat-header-cell"
+            *matHeaderCellDef
+            mat-sort-header
+            matTooltip="Area Name"
+          >
+            Area Name
+          </th>
+          <td
+            mat-cell
+            class="mat-cell"
+            *matCellDef="let element"
+            style="width: 39%"
+          >
+            {{ element?.AreaName }}
+          </td>
+        </ng-container>
+
+        <!-- Area code Column -->
+        <ng-container matColumnDef="AreaCode">
+          <th
+            class="mat-header-cell"
+            *matHeaderCellDef
+            mat-sort-header
+            matTooltip="Area Code"
+          >
+            Area Code
+          </th>
+          <td
+            mat-cell
+            class="mat-cell"
+            *matCellDef="let element"
+            style="width: 39%"
+          >
+            {{ element?.AreaCode }}
+          </td>
+        </ng-container>
+
+        <!-- action buttons -->
+        <ng-container matColumnDef="action">
+          <th
+            class="mat-header-cell text-center"
+            *matHeaderCellDef
+            colspan="12"
+          >
+            Action
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            style="width: 15%"
+            class="mat-cell actionBtn text-center"
+          >
+            <button
+              mat-button
+              *ngIf="element?.IsDeleted == 0"
+              color="primary"
+              data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop"
+              matTooltip="Edit"
+              (click)="updateArea(element)"
+            >
+              <i class="fa-regular fa-pen-to-square"></i>
+            </button>
+            <span *ngIf="element?.IsDeleted == 0; else restore">
+              <button
+                mat-button
+                color="warn"
+                matTooltip="Delete"
+                (click)="deleteArea(element, '0', 'delete')"
+              >
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </span>
+            <ng-template #restore>
+              <button
+                mat-button
+                color="warn"
+                matTooltip="Restore"
+                (click)="deleteArea(element, '1', 'restore')"
+              >
+                <i class="fa-solid fa-arrow-rotate-left"></i>
+              </button>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+    <!-- for pagination -->
+    <mat-paginator
+      class="mat-paginator"
+      #paginator
+      [length]="area.length"
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 20, 100, 1000]"
+      aria-label="Select page"
+    >
+    </mat-paginator>
+  </div>
+</div>
+
+<!-- modal form -->
+<div
+  class="modal fade"
+  id="staticBackdrop"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-md modal-dialog-scrollable m-auto">
+    <div class="modal-content rounded-0 p-0 w-100 mt-5" style="margin: 90px">
+      <div class="modal-body">
+        <div class="text-end">
+          <button
+            #closeModal
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+          ></button>
+        </div>
+        <fieldset class="border p-2">
+          <legend
+            class="float-none w-auto p-2"
+            style="color: rgb(154, 30, 30); font-family: Poppins, sans-serif"
+          >
+            {{ isUpdate ? "Update Area" : "Add Area" }}
+          </legend>
+          <div class="container-fluid p-4 pt-2 ps-2 pe-2">
+            <form action="" [formGroup]="areaForm">
+              <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-12 text-center">
+                  <mat-form-field class="w-75">
+                    <mat-label>Area Name</mat-label>
+                    <input matInput formControlName="AreaName" />
+                    <mat-error
+                      *ngIf="
+                        areaForm.controls['AreaName'].hasError('required') &&
+                        (areaForm.controls['AreaName'].touched ||
+                          areaForm.controls['AreaName'].dirty)
+                      "
+                    >
+                      <span>Area name is required.</span>
+                    </mat-error>
+                    <mat-error
+                      *ngIf="areaForm.controls['AreaName'].hasError('pattern')"
+                    >
+                      <span>Please enter valid Area name.</span>
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        areaForm.controls['AreaName'].hasError('maxlength')
+                      "
+                    >
+                      <span
+                        >Length should not be greater than 30 characters.</span
+                      >
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        areaForm.controls['AreaName'].hasError('minlength')
+                      "
+                    >
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-6 col-12 text-center">
+                  <mat-form-field class="w-75">
+                    <mat-label>Area Code</mat-label>
+                    <input
+                      matInput
+                      formControlName="AreaCode"
+                      (keyup)="hasError(areaForm.controls['AreaCode'])"
+                    />
+                    <mat-error
+                      *ngIf="
+                        areaForm.controls['AreaCode'].hasError('required') &&
+                        areaForm.controls['AreaCode'].touched
+                      "
+                    >
+                      <span>Area code is required.</span>
+                    </mat-error>
+                    <mat-error
+                      *ngIf="areaForm.controls['AreaCode'].hasError('pattern')"
+                    >
+                      <span>Please enter valid Area code.</span>
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        areaForm.controls['AreaCode'].hasError('maxlength')
+                      "
+                    >
+                      <span
+                        >Length should not be greater than 10 characters.</span
+                      >
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        areaForm.controls['AreaCode'].hasError('minlength')
+                      "
+                    >
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12 col-lg-12 col-sm-12 col-md-12 mt-5 text-end">
+                  <button
+                    mat-flat-button
+                    color="primary"
+                    class="m-1"
+                    (click)="isUpdate ? updateAreaData() : areaSumbit()"
+                    [disabled]="areaForm.invalid"
+                  >
+                    {{ isUpdate ? "Update" : "Submit" }}
+                  </button>
+                  <button
+                    mat-flat-button
+                    color="warn"
+                    #closeModal
+                    type="button"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                    (click)="close()"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+              <!-- </div> -->
+            </form>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+</div>

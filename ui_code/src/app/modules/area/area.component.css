@@ -1,0 +1,22 @@
+::ng-deep .modal-backdrop {
+  z-index: -1;}
+
+.modal{
+
+  --bs-modal-width: 650px;
+}
+
+/* close btn */
+.btn-close {
+  margin-right: 10px !important;
+  width: 0.4em;
+  height: 0.4em;
+}
+
+*{
+  margin:0;
+}
+
+
+
+

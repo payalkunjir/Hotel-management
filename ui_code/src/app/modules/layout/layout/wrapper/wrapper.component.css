@@ -1,0 +1,29 @@
+:host
+{
+display: flex;
+flex-direction: column;
+height: 100%;
+}
+.mat-drawer{
+  width: 247px;
+  background-color:#1a2041cc;
+  /* background: linear-gradient(90deg,#02105ecc, rgba(8, 91, 173, 0.849)); */
+
+
+
+}
+.mat-drawer-container{
+height:  100%;
+}
+
+.mat-drawer-content{
+  background-color: white;
+  width: auto;
+
+
+}
+.mat-drawer-content {
+  display: block;
+  height: 100%;
+  overflow: unset !important;
+}

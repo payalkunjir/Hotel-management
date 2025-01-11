@@ -1,0 +1,567 @@
+<!-- carousel images -->
+<div class="container-fluid">
+  <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="../../assets/images/images/Dine-hotel.jpg" class="d-block w-100  " alt="...">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>BOOK YOUR STAY</h5>
+          <h4>!!! Discover A Brand Luxurious Hotel !!!</h4>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="../../assets/images/images/athenaeum.jpg" class="d-block w-100 " alt="...">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>BOOK YOUR STAY</h5>
+          <h4>!!! Discover A Brand Luxurious Hotel !!!</h4>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="../../assets/images/images/lobby-img-hotel3.jpg" class="d-block w-100  " alt="...">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>BOOK YOUR STAY</h5>
+          <h4>!!! Discover A Brand Luxurious Hotel !!!</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- form -->
+<div class="container  shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+  <div class="row ">
+    <div class="col-md-3 col-6 ">
+      <mat-form-field appearance="outline">
+        <mat-select placeholder="Area" [(ngModel)]="selectedAreaId">
+          <mat-option *ngFor="let area of areas" [value]="area.AreaId">
+            {{area.AreaName}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="col-md-3 col-6 text-center">
+      <button class="btn w-75" appearance="outline" (click)="getHotelsByArea()" [disabled]="!selectedAreaId">
+        Submit
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- card -->
+<div class="container">
+  <div class="row d-flex justify-content-center" *ngFor="let hotel of hotels">
+    <div class="card mb-3">
+      <div class="row g-0">
+        <div class="col-md-4">
+          <img src="{{hotel.HotelImage}}" class="img-fluid image rounded-start" alt="...">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <div class="card-title">{{hotel?.HotelName}}
+              <span class="ps-5 category text-end">{{hotel?.HotelCategory}}</span>
+            </div>
+            <div class="address"> <i class="fa-solid fa-location-dot"></i> {{hotel?.HotelAddress}}</div>
+            <div class="area"><small class="text-muted"><i class="fa-solid fa-road"></i> {{hotel?.AreaName}}
+                {{hotel?.HotelDistanceFromVenue}}
+                <div class="contact"><i class="fa-solid fa-phone"></i>{{hotel?.HotelContactNo}}</div>
+                <button class="show1" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                  matTooltip="Add Participant" (click)="bookNow(hotel?.HotelId)">Book Now</button>
+              </small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-scrollable m-auto">
+    <div class="modal-content rounded-0 p-0 " style="margin: 80px; ">
+      <div class="modal-body">
+        <div class="text-end">
+          <button #closeModal type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="close()"></button>
+        </div>
+        <fieldset class="border p-1">
+          <legend class="float-none w-auto p-1" style="color:rgb(154, 30, 30);font-family: Poppins, sans-serif;">
+            Add Participant
+          </legend>
+          <div class="container-fluid p-5 pt-1 ps-2 pe-2">
+            <form action="" [formGroup]="participantForm">
+              <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label>Participant First Name</mat-label>
+                    <input matInput formControlName="ParticipantFirstName" />
+                    <mat-error
+                      *ngIf="participantForm.controls['ParticipantFirstName'].hasError('required') && (participantForm.controls['ParticipantFirstName'].touched || participantForm.controls['ParticipantFirstName'].dirty)">
+                      <span>Participant first name is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['ParticipantFirstName'].hasError('pattern')">
+                      <span>Please enter valid participant first name.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['ParticipantFirstName'].hasError('maxlength')">
+                      <span>Length should not be greater than 15 characters.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['ParticipantFirstName'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center  mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label>Participant Middle Name</mat-label>
+                    <input matInput formControlName="ParticipantMiddleName" />
+                    <mat-error
+                      *ngIf="participantForm.controls['ParticipantMiddleName'].hasError('required') && (participantForm.controls['ParticipantMiddleName'].touched || participantForm.controls['ParticipantMiddleName'].dirty)">
+                      <span>Participant middle name is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['ParticipantMiddleName'].hasError('pattern')">
+                      <span>Please enter valid Participant middle name.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['ParticipantMiddleName'].hasError('maxlength')">
+                      <span>Length should not be greater than 15 characters.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['ParticipantMiddleName'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label>Participant Last Name</mat-label>
+                    <input matInput formControlName="ParticipantLastName"
+                      (keyup)="hasError(participantForm.controls['ParticipantLastName'])" />
+                    <mat-error
+                      *ngIf="participantForm.controls['ParticipantLastName'].hasError('required') && participantForm.controls['ParticipantLastName'].touched">
+
+                      <span>Participant last name is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['ParticipantLastName'].hasError('pattern')">
+                      <span>Please enter valid Participant last name.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['ParticipantLastName'].hasError('maxlength')">
+                      <span>Length should not be greater than 15 characters.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['ParticipantLastName'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label>Identity No.</mat-label>
+                    <input matInput formControlName="IdentityNo"
+                      (keyup)="hasError(participantForm.controls['IdentityNo'])" />
+                    <mat-error
+                      *ngIf="participantForm.controls['IdentityNo'].hasError('required') && participantForm.controls['IdentityNo'].touched">
+                      <span>Identity no. is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['IdentityNo'].hasError('pattern')">
+                      <span>Please enter valid identity no..</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['IdentityNo'].hasError('maxlength')">
+                      <span>Length should not be greater than 10 characters.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['IdentityNo'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label> Designation </mat-label>
+                    <mat-select formControlName="DesignationId">
+                      <mat-option *ngFor="let item of getDesignations" [value]="item?.DesignationId">
+                        {{item?.DesignationName}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="participantForm.controls['DesignationId'].hasError('required') && (participantForm.controls['DesignationId'].touched || participantForm.controls['DesignationId'].dirty)">
+                      <span>Designation is required.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label> Contact No </mat-label>
+                    <input matInput formControlName="ContactNo" />
+                    <mat-error
+                      *ngIf="participantForm.controls['ContactNo'].hasError('required') && (participantForm.controls['ContactNo'].touched || participantForm.controls['ContactNo'].dirty)">
+                      <span> Contact no. is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['ContactNo'].hasError('pattern')">
+                      <span>Please enter valid contact no. only.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['ContactNo'].hasError('maxlength')">
+                      <span>Length should not be greater than 10 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field>
+                    <mat-label> State </mat-label>
+                    <mat-select formControlName="State">
+                      <mat-option *ngFor="let state of stateData" [value]="state?.name">{{state?.name}}</mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="participantForm.controls['State'].hasError('required') && participantForm.controls['State'].touched">
+                      <span>State is required.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field>
+                    <mat-label>Guest Category</mat-label>
+                    <mat-select formControlName="GuestCategoryId">
+                      <mat-option *ngFor="let item of getGuestCategories"
+                        [value]="item?.GuestCategoryId">{{item?.GuestCategoryName}}</mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="participantForm.controls['GuestCategoryId'].hasError('required') && (participantForm.controls['GuestCategoryId'].touched || participantForm.controls['GuestCategoryId'].dirty)">
+                      <span>Guest category is required.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label>Expected Arrival Time</mat-label>
+                    <input matInput [ngxMatTimepicker]="picker" formControlName="ExpectedArrivalTime">
+                    <ngx-mat-timepicker #picker></ngx-mat-timepicker>
+                    <mat-error
+                      *ngIf="participantForm.controls['ExpectedArrivalTime'].hasError('required') && participantForm.controls['ExpectedArrivalTime'].touched">
+                      <span>Expected arrival time is required.</span>
+                    </mat-error>
+                  </mat-form-field>
+
+                </div>
+
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label>Expected Departure Time</mat-label>
+                    <input matInput [ngxMatTimepicker]="picker11" formControlName="ExpectedDepartureTime">
+                    <ngx-mat-timepicker #picker11></ngx-mat-timepicker>
+                    <mat-error
+                      *ngIf="participantForm.controls['ExpectedDepartureTime'].hasError('required') && participantForm.controls['ExpectedDepartureTime'].touched">
+                      <span>Expected departure time is required.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label>Check In Date</mat-label>
+                    <input matInput formControlName="CheckinDate" [matDatepicker]="picker1"
+                      (keyup)="hasError(participantForm.controls['CheckinDate'])">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                    <mat-error
+                      *ngIf="participantForm.controls['CheckinDate'].hasError('required') && participantForm.controls['CheckinDate'].touched">
+                      <span>Check in date is required.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label>Check In Time</mat-label>
+                    <input matInput [ngxMatTimepicker]="picker2" formControlName="CheckinTime">
+                    <ngx-mat-timepicker #picker2></ngx-mat-timepicker>
+                    <mat-error
+                      *ngIf="participantForm.controls['CheckinTime'].hasError('required') && participantForm.controls['CheckinTime'].touched">
+                      <span>Check in time is required.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label>Check Out Date</mat-label>
+                    <input matInput formControlName="CheckoutDate" [min]="participantForm.controls.CheckinDate.value"
+                      [matDatepicker]="picker4" (keyup)="hasError(participantForm.controls['CheckoutDate'])">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker4"></mat-datepicker-toggle>
+                    <mat-datepicker #picker4></mat-datepicker>
+                    <mat-error
+                      *ngIf="participantForm.controls['CheckoutDate'].hasError('required') && participantForm.controls['CheckoutDate'].touched">
+                      <span>Check out date is required.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label>Check Out Time</mat-label>
+                    <input matInput [ngxMatTimepicker]="picker3" formControlName="CheckoutTime">
+                    <ngx-mat-timepicker #picker3></ngx-mat-timepicker>
+                    <mat-error
+                      *ngIf="participantForm.controls['CheckoutTime'].hasError('required') && participantForm.controls['CheckoutTime'].touched">
+                      <span>Check out time is required.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field>
+                    <mat-label> Venue </mat-label>
+                    <mat-select formControlName="VenueId">
+                      <mat-option *ngFor="let item of getVenue" [value]="item?.VenueId">{{item?.VenueName}}</mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="participantForm.controls['VenueId'].hasError('required') && (participantForm.controls['VenueId'].touched || participantForm.controls['VenueId'].dirty)">
+                      <span>Venue is required.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field>
+                    <mat-label> Area 1</mat-label>
+                    <mat-select formControlName="AreaId" (selectionChange)="getAllHotelsByArea($event.value)"
+                      [disabled]="true">
+                      <mat-option *ngFor="let item of areaData" [value]="item.AreaId">{{item.AreaName}} </mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="participantForm.controls['AreaId'].hasError('required') && (participantForm.controls['AreaId'].touched || participantForm.controls['AreaId'].dirty)">
+                      <span>Area is required.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field>
+                    <mat-label> Hotel </mat-label>
+                    <mat-select formControlName="HotelId">
+                      <mat-option *ngFor="let hotel of hotels"
+                        [value]="hotel?.HotelId">{{hotel?.HotelName}}</mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="participantForm.controls['HotelId'].hasError('required') && (participantForm.controls['HotelId'].touched || participantForm.controls['HotelId'].dirty)">
+                      <span>Hotel is required.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field>
+                    <mat-label>Vehicle </mat-label>
+                    <mat-select formControlName="VehicleId">
+                      <mat-option *ngFor="let item of getVehicles"
+                        [value]="item?.VehicleId">{{item?.NameOfVehicle}}</mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="participantForm.controls['VehicleId'].hasError('required') && (participantForm.controls['VehicleId'].touched || participantForm.controls['VehicleId'].dirty)">
+                      <span>Vehicle is required.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field>
+                    <mat-label>Driver </mat-label>
+                    <mat-select formControlName="DriverId">
+                      <mat-option *ngFor="let item of getDrivers"
+                        [value]="item?.DriverId">{{item?.DriverName}}</mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="participantForm.controls['DriverId'].hasError('required') && (participantForm.controls['DriverId'].touched || participantForm.controls['DriverId'].dirty)">
+                      <span>Driver is required.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label> Alloted Room No </mat-label>
+                    <input matInput formControlName="AllotedRoomNo" />
+                    <mat-error
+                      *ngIf="participantForm.controls['AllotedRoomNo'].hasError('required') && (participantForm.controls['AllotedRoomNo'].touched || participantForm.controls['AllotedRoomNo'].dirty)">
+                      <span>Allowted room no.is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['AllotedRoomNo'].hasError('pattern')">
+                      <span>Please enter valid allowted room no only.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['AllotedRoomNo'].hasError('maxlength')">
+                      <span>Length should not be greater than 15 characters.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['AllotedRoomNo'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field>
+                    <mat-label> Occupancy Type </mat-label>
+                    <mat-select formControlName="OccupanyType">
+                      <mat-option *ngFor="let item of occupancyType" [value]="item?.value">{{item?.value}}</mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="participantForm.controls['OccupanyType'].hasError('required') && (participantForm.controls['OccupanyType'].touched || participantForm.controls['OccupanyType'].dirty)">
+                      <span>Type is required.</span>
+                    </mat-error>
+
+                  </mat-form-field>
+                </div>
+
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label>LO First Name</mat-label>
+                    <input matInput formControlName="LOFirstName" />
+                    <mat-error
+                      *ngIf="participantForm.controls['LOFirstName'].hasError('required') && (participantForm.controls['LOFirstName'].touched || participantForm.controls['LOFirstName'].dirty)">
+                      <span> First name is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['LOFirstName'].hasError('pattern')">
+                      <span>Please enter valid first name.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['LOFirstName'].hasError('maxlength')">
+                      <span>Length should not be greater than 15 characters.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['LOFirstName'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3 ">
+                  <mat-form-field class="text-left">
+                    <mat-label>LO Middle Name</mat-label>
+                    <input matInput formControlName="LOMiddleName" />
+                    <mat-error
+                      *ngIf="participantForm.controls['LOMiddleName'].hasError('required') && (participantForm.controls['LOMiddleName'].touched || participantForm.controls['LOMiddleName'].dirty)">
+                      <span> Middle name is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['LOMiddleName'].hasError('pattern')">
+                      <span>Please enter valid middle name.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['LOMiddleName'].hasError('maxlength')">
+                      <span>Length should not be greater than 15 characters.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['LOMiddleName'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label>LO Last Name</mat-label>
+                    <input matInput formControlName="LOLastName"
+                      (keyup)="hasError(participantForm.controls['LOLastName'])" />
+                    <mat-error
+                      *ngIf="participantForm.controls['LOLastName'].hasError('required') && participantForm.controls['LOLastName'].touched">
+
+                      <span> Last name is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['LOLastName'].hasError('pattern')">
+                      <span>Please enter valid last name.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['LOLastName'].hasError('maxlength')">
+                      <span>Length should not be greater than 15 characters.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['LOLastName'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label> Identity No. Of LO </mat-label>
+                    <input matInput formControlName="IdentityNoOfLO" />
+                    <mat-error
+                      *ngIf="participantForm.controls['IdentityNoOfLO'].hasError('required') && (participantForm.controls['IdentityNoOfLO'].touched || participantForm.controls['IdentityNoOfLO'].dirty)">
+                      <span>Identity no. is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['IdentityNoOfLO'].hasError('pattern')">
+                      <span>Please enter valid identity no. only.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['IdentityNoOfLO'].hasError('maxlength')">
+                      <span>Length should not be greater than 10 characters.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['IdentityNoOfLO'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label> Contact No. Of LO </mat-label>
+                    <input matInput formControlName="ContactNoOfLO" />
+                    <mat-error
+                      *ngIf="participantForm.controls['ContactNoOfLO'].hasError('required') && (participantForm.controls['ContactNoOfLO'].touched || participantForm.controls['ContactNoOfLO'].dirty)">
+                      <span>Contact no. is required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['ContactNoOfLO'].hasError('pattern')">
+                      <span>Please enter valid contact no. only.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['ContactNoOfLO'].hasError('maxlength')">
+                      <span>Length should not be greater than 10 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+
+
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12 text-center mt-3">
+                  <mat-form-field class="text-left">
+                    <mat-label> Alloted Vehicle No </mat-label>
+                    <input matInput formControlName="AllotedVehicle" />
+                    <mat-error
+                      *ngIf="participantForm.controls['AllotedVehicle'].hasError('required') && (participantForm.controls['AllotedVehicle'].touched || participantForm.controls['AllotedVehicle'].dirty)">
+                      <span>Alloted vehicle no. vehicle required.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['AllotedVehicle'].hasError('pattern')">
+                      <span>Please enter valid alloted vehicle no. only.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['AllotedVehicle'].hasError('maxlength')">
+                      <span>Length should not be greater than 30 characters.</span>
+                    </mat-error>
+                    <mat-error *ngIf="participantForm.controls['AllotedVehicle'].hasError('minlength')">
+                      <span>Length should not be less than 2 characters.</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+              </div>
+              <div class="col-12 col-lg-12 col-sm-12 col-md-12 mt-3 text-end ">
+                <button mat-flat-button color="primary" class="m-1" (click)="participantSubmit()"
+                  [disabled]="participantForm.invalid">
+                  Submit
+                </button>
+                <button mat-flat-button color="warn" #closeModal type="button" data-bs-dismiss="modal"
+                  aria-label="Close" (click)="close()">
+                  Cancel
+                </button>
+                <div class="toast-container my-modal-toastr"></div>
+
+              </div>
+            </form>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+
+</div>
